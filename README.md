@@ -1,30 +1,27 @@
 # twitch.py
-
 [![PyPI - Version](https://img.shields.io/pypi/v/twitch.py?color=%23673AB7)](https://pypi.org/project/twitch.py)
 [![Python Versions](https://img.shields.io/pypi/pyversions/twitch.py?color=%23673AB7)](https://pypi.org/project/twitch.py)
 
-A Python wrapper for Twitch It handles real-time events via WebSocket EventSub and integrates with the Helix API,
-all designed for easy asynchronous use.
+A Python wrapper for Twitch that handles real-time events via WebSocket EventSub and integrates with the Helix API, all designed for easy asynchronous use.
+
+> **⚠️ Major Rework in Progress**  
+> I'm currently working on a complete rework of the library to improve performance, add new features, and enhance the overall developer experience. Stay tuned for updates!
 
 ## Installation
-
 To install **twitch.py**, use the appropriate command for your operating system:
 
 For Windows:
-
 ```bash
 py -3 -m pip install --upgrade twitch.py
 ```
 
 For macOS/Linux:
-
 ```bash
 python3 -m pip install --upgrade twitch.py
 ```
 
 ## Quick Start
-
-Here’s a simple example to get you started with twitch.py:
+Here's a simple example to get you started with twitch.py:
 
 ```python
 from twitch import Client
@@ -44,7 +41,6 @@ client.run('YOUR_USER_ACCESS_TOKEN')
 ```
 
 ## OAuth Authentication
-
 Authenticate easily with Twitch using the Device Flow authentication method:
 
 ```python
@@ -75,8 +71,6 @@ client.run()
 ```
 
 ## Documentation and Support
-
-For more detailed instructions,
-visit the [twitch.py Documentation](https://twitchpy.readthedocs.io/latest/).
+For more detailed instructions, visit the [twitch.py Documentation](https://twitchpy.readthedocs.io/latest/).
 
 Need help or want to join the community? Join the [Discord server](https://discord.gg/UFTkgnse7d).
