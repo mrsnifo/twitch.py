@@ -1,7 +1,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2025-present Snifo
+Copyright (c) 2025-present mrsnifo
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -24,89 +24,80 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Optional, Any, Dict, Union, Tuple
 import datetime
+import aiohttp
 import logging
+import yarl
 import json
 import time
 
-if TYPE_CHECKING:
-    from typing import Any, Union, Dict, Optional
-    import aiohttp
+__all__ = (
+    'from_iso_string',
+    'to_rfc3339_string',
+    'normalize_timezone',
+    'json_or_text',
+    'setup_logging',
+    'parse_mock_urls',
+    'ExponentialBackoff',
+)
 
-__all__ = ('setup_logging', 'json_or_text', 'convert_rfc3339', 'datetime_to_str', 'ExponentialBackoff')
 
+def from_iso_string(timestamp: str) -> datetime.datetime:
+    """Convert ISO8601 string to datetime object."""
+    return datetime.datetime.fromisoformat(timestamp)
 
-def setup_logging(*,
-                  handler: Optional[logging.Handler] = None,
-                  level: Optional[int] = None,
-                  root: bool = True) -> None:
-    """
-    Setup logging configuration.
-    """
-    if level is None:
-        level = logging.INFO
+def to_rfc3339_string(dt: datetime.datetime) -> str:
+    """Convert datetime to RFC3339 string format for Twitch API."""
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=datetime.timezone.utc)
+    return dt.isoformat()
 
-    if handler is None:
-        handler = logging.StreamHandler()
-
-    dt_fmt = '%Y-%m-%d %H:%M:%S'
-    formatter = logging.Formatter('[{asctime}] [{levelname}] {name}: {message}', dt_fmt, style='{')
-
-    if root:
-        logger = logging.getLogger()
-    else:
-        library, _, _ = __name__.partition('.')
-        logger = logging.getLogger(library)
-
-    handler.setFormatter(formatter)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-
+def normalize_timezone(dt: datetime.datetime) -> datetime.datetime:
+    """Normalize datetime to have timezone information."""
+    return dt.replace(tzinfo=datetime.timezone.utc) if dt.tzinfo is None else dt
 
 async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
-    """Read response from aiohttp.ClientResponse, parse as JSON if content-type is 'application/json',
-    otherwise return response text."""
-    text = await response.text(encoding='utf-8')
+    """Return parsed JSON if possible, otherwise return plain text."""
+    body = await response.text(encoding='utf-8')
+    content_type = response.headers.get('content-type', '').lower()
     try:
-        if 'application/json' in response.headers['content-type']:
-            return json.loads(text)
-    except KeyError:
-        pass
-    return text
+        if 'application/json' in content_type:
+            return json.loads(body) if body else {}
+        else:
+            return json.loads(body)
+    except (ValueError, json.JSONDecodeError):
+        return body
 
+def setup_logging(handler: Optional[logging.Handler] = None,
+                  level: Optional[int] = None,
+                  root: bool = True
+                  ) -> None:
+    """Setup logging configuration."""
 
-def convert_rfc3339(timestamp: Optional[str]) -> Optional[datetime]:
-    """
-    Convert RFC3339 timestamp string to a datetime object (UTC +0).
-    """
-    if timestamp.endswith('Z'):
-        timestamp = timestamp[:-1] + '+00:00'
-    return None if (not timestamp) else datetime.datetime.fromisoformat(timestamp)
+    # Use provided handler or default to console
+    handler = handler or logging.StreamHandler()
 
+    # Set formatter with timestamp, level, and message
+    handler.setFormatter(logging.Formatter(
+        '[{asctime}] [{levelname}] {name}: {message}',
+        '%Y-%m-%d %H:%M:%S',
+        style='{'
+    ))
 
-def datetime_to_str(__time: Optional[datetime], /) -> Optional[str]:
-    """
-    Convert local datetime object to UTC formatted RFC3339 timestamp string.
-    """
-    return None if time is None else __time.astimezone(datetime.timezone.utc).isoformat()
+    logger = logging.getLogger() if root else logging.getLogger(__name__.split('.')[0])
+    logger.setLevel(level if level is not None else logging.INFO)
+    logger.addHandler(handler)
+
+def parse_mock_urls(input_url: str) -> Tuple[str, str]:
+    """Parse input URL and return HTTP and WebSocket mock URLs."""
+    url = yarl.URL(input_url)
+    mock_url = f"{url.host}:{url.port}" if url.host else input_url
+    return f"http://{mock_url}/", f"ws://{mock_url}/ws"
 
 
 class ExponentialBackoff:
-    """
-    Handles retry intervals with exponential backoff.
-
-    Parameters
-    ----------
-    base_delay: int
-        The initial delay in seconds. The delay starts at this value and increases
-        exponentially with each retry.
-    max_delay: int
-        The maximum delay between retries. The exponential increase is capped
-        at this value.
-    reset_interval: int
-        The period in seconds after which the retry count is reset if no errors occur.
-    """
+    """Handles retry intervals with exponential backoff."""
 
     __slots__ = ('base_delay', 'max_delay', 'reset_interval', 'retry_count', 'last_failure_time')
 
@@ -118,15 +109,7 @@ class ExponentialBackoff:
         self.last_failure_time: float = time.monotonic()
 
     def get_delay(self) -> int:
-        """
-
-        Determine the delay before the next retry attempt.
-
-        Returns
-        -------
-        int
-            The delay in seconds before the next retry attempt.
-        """
+        """ Determine the delay before the next retry attempt."""
         current_time = time.monotonic()
         elapsed_time = current_time - self.last_failure_time
 

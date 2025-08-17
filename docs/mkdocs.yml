@@ -1,140 +1,116 @@
-# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
-
+# MkDocs configuration for twitch.py documentation
 site_name: twitch.py
-site_url: !!python/object/apply:os.getenv ["READTHEDOCS_CANONICAL_URL"]
+site_description: Python library for Twitch API and real-time WebSocket EventSub
 site_author: Snifo
+site_url: https://twitchpy.readthedocs.io
+docs_dir: src
 
-site_description: >-
-  A Python library designed to interact with Twitch's API and provide real-time event handling 
-  through WebSocket EventSub. It simplifies asynchronous operations, making it easy to integrate 
-  Twitch functionalities into your Python projects.
-
-# GitHub repository
+# Repository information
 repo_url: https://github.com/mrsnifo/twitch.py
 repo_name: mrsnifo/twitch.py
-copyright: Copyright (c) 2024-present Snifo
+copyright: Copyright (c) 2025-present mrsnifo
 
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/mrsnifo
-
-  analytics:
-    provider: google
-    property: !!python/object/apply:os.getenv ["GOOGLE_ANALYTICS_G"]
-
+# Theme configuration
 theme:
-  name: 'material'
-  custom_dir: overrides
   font:
     text: Roboto
+    code: Roboto Mono
+  name: material
   icon:
-    logo: material/twitch
+    logo: material/broadcast
+    repo: fontawesome/brands/github
+
+  # Custom directory for template overrides
+  custom_dir: overrides
+
+  # Twitch-inspired purple color scheme
   palette:
-    # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
-      primary: deep purple
+      primary: purple
       accent: deep purple
       toggle:
-        icon: material/lightbulb-auto
+        icon: material/link
         name: Switch to light mode
 
-    # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: deep purple
-      accent: deep purple
+      accent: purple
       toggle:
-        icon: material/lightbulb
+        icon: material/toggle-switch
         name: Switch to dark mode
 
-    # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: deep purple
-      accent: deep purple
+      accent: purple
       toggle:
-        icon: material/lightbulb-outline
+        icon: material/toggle-switch-off-outline
         name: Switch to system preference
 
+  # Essential features
   features:
-    - navigation.path
+    - navigation.top
     - navigation.tabs
-    - navigation.prune
-    - navigation.tracking
+    - search.highlight
     - content.code.copy
-    - content.tabs.link
+    - navigation.path
+    - navigation.prune
 
+# Site navigation
 nav:
   - Getting started:
       - 'index.md'
-      - Setup: 'setup.md'
+      - Concepts: 'concepts.md'
       - Quickstart: 'quickstart.md'
-      - Questions: 'questions.md'
   - Reference:
-      - Client: 'reference/client.md'
-      - Classes: 'reference/classes.md'
-      - Exceptions: 'reference/exceptions.md'
-      - Types: 'reference/types.md'
-      - Debug: 'reference/debug.md'
-  - Events Reference:
-      - 'events/index.md'
-      - Events: 'events/events.md'
-      - Custom: 'events/custom.md'
-      - Types: 'events/types.md'
+      - App: 'reference/app/app.md'
+      - Classes: 'reference/app/classes.md'
+      - Errors: 'reference/app/errors.md'
+      - Models: 'reference/app/models.md'
+      - Utils: 'reference/app/utils.md'
+  - Eventsub:
+      - 'reference/eventsub/index.md'
+      - Client: 'reference/eventsub/client.md'
+      - Classes: 'reference/eventsub/classes.md'
+      - Models: 'reference/eventsub/models.md'
+      - Errors: 'reference/eventsub/errors.md'
+      - Debug: 'reference/eventsub/debug.md'
+  - Oauth:
+      - Flows: 'reference/oauth/flows.md'
+      - Scopes: 'reference/oauth/scopes.md'
   - Extensions:
-      - Bot:
-          - 'ext/bot/index.md'
-          - Bot: 'ext/bot/bot.md'
-          - Events: 'ext/bot/events.md'
-      - Oauth:
-          - 'ext/oauth/index.md'
-          - Oauth: 'ext/oauth/oauth.md'
-          - Events: 'ext/oauth/events.md'
-          - Enums: 'ext/oauth/enums.md'
-      - Overlay:
-          - 'ext/overlay/index.md'
-          - Overlay: 'ext/overlay/overlay.md'
-          - Format: 'ext/overlay/format.md'
-          - Attachment: 'ext/overlay/attachment.md'
-          - Events: 'ext/overlay/events.md'
+      - Tasks: 'ext/tasks.md'
+
+# Markdown processing
 markdown_extensions:
-  - def_list
   - admonition
-  - attr_list
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - md_in_html
+  - codehilite
+  - footnotes
+  - toc:
+      permalink: true
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.details
-  - codehilite
-  - toc:
-      permalink: true
-      toc_depth: 3
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
 
+# Documentation plugins
 plugins:
-  - search:
-      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - search
   - mkdocstrings:
-      default_handler: python
-      enable_inventory: true
       handlers:
         python:
-
-          import:
+          inventories:
             - https://docs.python.org/3/objects.inv
-          paths: [.., ../twitch/ext]
+          paths: [.., twitch]
           options:
             inherited_members: true
             show_source: false
-            show_root_toc_entry: true
             show_root_heading: true
+            show_root_toc_entry: true
             show_root_full_path: false
             members_order: source
             annotations_path: source
@@ -144,5 +120,17 @@ plugins:
             show_signature_annotations: true
             signature_crossrefs: true
             show_bases: true
+            show_submodules: true
+            merge_init_into_class: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            preload_modules: [ twitch ]
+            allow_inspection: true
             filters:
               - "!^_"
+              - "!^test_"
+            extra:
+              Extensions:
+                - griffe.extensions.dataclasses
+                - griffe.extensions.hybrid
+              load_external_modules: true

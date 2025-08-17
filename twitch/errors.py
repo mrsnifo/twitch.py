@@ -1,7 +1,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2025-present Snifo
+Copyright (c) 2025-present mrsnifo
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -24,13 +24,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing import Dict, Optional, Any, Union
-    from aiohttp import ClientWebSocketResponse
-    from aiohttp import ClientResponse
-
+from typing import Optional, Dict, Any, Union
+from aiohttp import ClientResponse
 
 __all__ = ('TwitchException',
            'ClientException',
@@ -38,39 +33,67 @@ __all__ = ('TwitchException',
            'TwitchServerError',
            'Forbidden',
            'NotFound',
+           'RateLimited',
+           'BadRequest',
+           'Unauthorized',
            'AuthFailure',
-           'ConnectionClosed',
-           'UnregisteredUser')
+           'Conflict',
+           'TokenError'
+           )
 
 
 class TwitchException(Exception):
-    """
-    Base exception for twitch.py.
-    """
+    """Base exception for twitch.py."""
     pass
 
 
 class ClientException(TwitchException):
-    """
-    Exception raised when an operation in the Client class fails.
-    """
+    """ Exception raised when an operation in the Client class fails."""
     pass
 
-
 class HTTPException(TwitchException):
-    """Exception raised for failed HTTP requests."""
+    """
+    Exception raised for failed HTTP requests to the Twitch API.
 
-    def __init__(self, response: ClientResponse, message: Optional[Union[str, Dict[str, Any]]]):
+    Attributes
+    ----------
+    response: aiohttp.ClientResponse
+        The original aiohttp response object.
+    status: int
+        The HTTP status code of the response.
+    code: int or str
+        The Twitch API-specific error code, if available.
+    text: str
+        The error message or description.
+    headers: dict
+        The response headers from aiohttp.
+    """
+
+    def __init__(self, response: ClientResponse, message: Optional[Union[str, Dict[str, Any]]] = None):
         self.response = response
-        self.status = response.status if hasattr(response, 'status') else 0
+        self.status = getattr(response, 'status', 0)
+        self.headers = dict(response.headers) if hasattr(response, 'headers') else {}
 
         if isinstance(message, dict):
-            self.code = message.get('status', 0)
-            self.text = message.get('message', '')
-        else:
-            self.text = message or ''
+            self.code = message.get('status', message.get('error', 0))
+            self.text = message.get('message', message.get('error_description', ''))
+            if 'error' in message and isinstance(message['error'], str):
+                self.text = f"{message['error']}: {message.get('message', '')}"
+        elif isinstance(message, str):
+            self.text = message
             self.code = 0
-        super().__init__(f'{self.response.reason} (error code: {self.code}): {self.text}')
+        else:
+            self.text = getattr(response, 'reason', 'Unknown error')
+            self.code = 0
+        super().__init__(self.text)
+
+    def is_client_error(self) -> bool:
+        """Check if this is a client error (4xx status code)."""
+        return 400 <= self.status < 500
+
+    def is_server_error(self) -> bool:
+        """Check if this is a server error (5xx status code)."""
+        return 500 <= self.status < 600
 
 
 class TwitchServerError(HTTPException):
@@ -88,22 +111,31 @@ class NotFound(HTTPException):
     pass
 
 
+class RateLimited(HTTPException):
+    """Exception raised when rate limited and max timeout exceeded."""
+    pass
+
+
+class BadRequest(HTTPException):
+    """Exception raised when status code 400 occurs."""
+    pass
+
+
+class Unauthorized(HTTPException):
+    """Exception raised when status code 401 occurs."""
+    pass
+
+
+class Conflict(HTTPException):
+    """Exception raised when status code 409 occurs."""
+    pass
+
+
 class AuthFailure(ClientException):
     """Exception raised when authentication fails, typically due to invalid credentials."""
     pass
 
 
-class UnregisteredUser(ClientException):
-    """Exception raised when the user is UnregisteredUse."""
+class TokenError(ClientException):
+    """Exception raised when there are token-related issues."""
     pass
-
-
-class ConnectionClosed(ClientException):
-    """
-    Exception raised when the WebSocket connection is closed unexpectedly.
-    """
-
-    def __init__(self, socket: ClientWebSocketResponse, *, code: Optional[int] = None):
-        self.code: int = code or socket.close_code or -1
-        self.reason: str = ''
-        super().__init__(f'WebSocket closed with {self.code} close code.')

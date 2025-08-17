@@ -1,0 +1,43 @@
+name: "Question"
+description: Ask a question or get help
+title: "[QUESTION] - <title>"
+labels: [
+  "question"
+]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: "Question"
+      description: What would you like to know?
+      placeholder: Please be as specific as possible...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: "Context"
+      description: Provide any relevant context or background information
+      placeholder: What are you trying to accomplish? What have you already tried?
+    validations:
+      required: false
+  - type: textarea
+    id: code
+    attributes:
+      label: "Code/Configuration"
+      description: Share relevant code snippets or configuration files
+      render: bash
+      placeholder: Include any relevant code or configuration
+    validations:
+      required: false
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: "Urgency"
+      description: How urgently do you need help?
+      options:
+        - Low - I can wait
+        - Medium - I'd like help soon
+        - High - I'm blocked
+    validations:
+      required: false

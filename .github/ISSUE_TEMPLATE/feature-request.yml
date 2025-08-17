@@ -1,0 +1,58 @@
+name: "Feature Request"
+description: Suggest an idea for this project
+title: "[FEATURE] - <title>"
+labels: [
+  "enhancement"
+]
+body:
+  - type: checkboxes
+    id: no_duplicate
+    attributes:
+      label: "No Duplicate"
+      description: "Please confirm you have checked for existing requests"
+      options:
+        - label: "I have checked, and this request has not been made before"
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Problem Statement"
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: "Proposed Solution"
+      description: Describe the solution you'd like
+      placeholder: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Alternatives Considered"
+      description: Describe alternatives you've considered
+      placeholder: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "Priority"
+      description: How important is this feature to you?
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: "Additional context"
+      description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false

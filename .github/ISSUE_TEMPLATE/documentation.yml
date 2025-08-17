@@ -1,0 +1,45 @@
+name: "Documentation Issue"
+description: Report an issue with documentation
+title: "[DOCS] - <title>"
+labels: [
+  "documentation"
+]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: "Page/Section"
+      description: Which page or section of the documentation has the issue?
+      placeholder: e.g., Getting Started Guide, API Reference
+    validations:
+      required: true
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: "Issue Type"
+      description: What type of documentation issue is this?
+      options:
+        - Missing information
+        - Incorrect information
+        - Outdated information
+        - Typo/Grammar
+        - Broken link
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: Please describe the issue in detail
+      placeholder: What's wrong with the documentation?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: "Suggested Fix"
+      description: If you have a suggestion for how to fix this, please share it
+      placeholder: How should this be corrected or improved?
+    validations:
+      required: false

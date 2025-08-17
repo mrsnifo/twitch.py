@@ -1,76 +1,83 @@
 # twitch.py
-[![PyPI - Version](https://img.shields.io/pypi/v/twitch.py?color=%23673AB7)](https://pypi.org/project/twitch.py)
-[![Python Versions](https://img.shields.io/pypi/pyversions/twitch.py?color=%23673AB7)](https://pypi.org/project/twitch.py)
+[![PyPI - Version](https://img.shields.io/pypi/v/twitch.py?color=%236A5ACD)](https://pypi.org/project/twitch.py)
+[![Python Versions](https://img.shields.io/pypi/pyversions/twitch.py?color=%236A5ACD)](https://pypi.org/project/twitch.py)
 
-A Python wrapper for Twitch that handles real-time events via WebSocket EventSub and integrates with the Helix API, all designed for easy asynchronous use.
+An async Python wrapper for Twitch that handles real-time events via WebSocket EventSub and integrates with the Helix API.
 
-> **⚠️ Major Rework in Progress**  
-> I'm currently working on a complete rework of the library to improve performance, add new features, and enhance the overall developer experience. Stay tuned for updates!
+## Key Features
+* Async/await support throughout
+* Complete Twitch Helix API integration
+* WebSocket EventSub for real-time events
+* Built-in authentication and token management
 
-## Installation
-To install **twitch.py**, use the appropriate command for your operating system:
-
-For Windows:
+## Installing
+To install the library, you can just run the following command:
 ```bash
-py -3 -m pip install --upgrade twitch.py
+# Linux/macOS
+python3 -m pip install -U twitch.py
+# Windows
+py -3 -m pip install -U twitch.py
 ```
 
-For macOS/Linux:
+For the development version:
 ```bash
-python3 -m pip install --upgrade twitch.py
+git clone https://github.com/mrsnifo/twitch.py
+cd twitch.py
+python3 -m pip install -U .
 ```
 
-## Quick Start
-Here's a simple example to get you started with twitch.py:
-
+## Quick Example
 ```python
-from twitch import Client
-from twitch.types import eventsub
+from twitch import App
 
-client = Client(client_id='YOUR_CLIENT_ID')
+async def main():
+    async with App('CLIENT_ID', 'CLIENT_SECRET') as app:
+        emotes = await app.application.get_global_emotes()
+        print(f'Found {len(emotes)} global emotes')
+
+import asyncio
+asyncio.run(main())
+```
+
+## Client App Example
+```python
+from twitch.eventsub import ClientApp, Event, ChannelChatMessageEvent
+
+client = ClientApp('CLIENT_ID', 'CLIENT_SECRET')
+
+@client.event
+async def on_chat_message_v1(message: Event[ChannelChatMessageEvent]):
+    print(message.event.message)
+
+@client.event
+async def on_ready():
+    user = await client.add_user('ACCESS_TOKEN')
+    await client.eventsub.channel_chat_message(broadcaster_user_id=user.id, user_id=user.id)
+
+# Switches between shards if one fails. For multi-sharding use MultiShardClientApp.
+client.run('CONDUIT_ID', shard_ids=(0,))
+```
+
+## Client User Example
+```python
+from twitch.eventsub import ClientUser, Event, ChannelFollowEvent
+
+client = ClientUser('CLIENT_ID', 'CLIENT_SECRET')
 
 @client.event
 async def on_ready():
     print('Client is ready!')
+    await client.eventsub.channel_follow()
 
 @client.event
-async def on_follow(data: eventsub.channels.FollowEvent):
-    await client.channel.chat.send_message(f'{data["user_name"]} just followed the channel!')
+async def on_channel_follow_v2(message: Event[ChannelFollowEvent]):
+    print(f'{message.event.user.name} just followed!')
 
-client.run('YOUR_USER_ACCESS_TOKEN')
+client.run('ACCESS_TOKEN')
 ```
 
-## OAuth Authentication
-Authenticate easily with Twitch using the Device Flow authentication method:
+More usage examples available in the examples folder.
 
-```python
-from twitch import Client
-from twitch.types import eventsub
-from twitch.ext.oauth import DeviceAuthFlow, Scopes
-
-client = Client(client_id='YOUR_CLIENT_ID')
-
-DeviceAuthFlow(
-    client=client,
-    scopes=[Scopes.CHANNEL_READ_SUBSCRIPTIONS]
-)
-
-@client.event
-async def on_code(code: str):
-    print(f'Go to https://www.twitch.tv/activate and enter this code: {code}')
-
-@client.event
-async def on_auth(access_token: str, refresh_token: str):
-    print(f'Access Token: {access_token}')
-    
-@client.event
-async def on_subscribe(data: eventsub.channels.SubscribeEvent):
-    await client.channel.chat.send_message(f'{data["user_name"]} just Subscribed!')
-
-client.run()
-```
-
-## Documentation and Support
-For more detailed instructions, visit the [twitch.py Documentation](https://twitchpy.readthedocs.io/latest/).
-
-Need help or want to join the community? Join the [Discord server](https://discord.gg/UFTkgnse7d).
+## Links
+- [Documentation](https://twitchpy.readthedocs.io/latest/)
+- [Twitch API](https://discord.gg/UFTkgnse7d)

@@ -1,23 +1,26 @@
 """
 twitch.py
 
-Real-time Twitch Event Handling and Helix API Integration in Python
+Real-time Twitch EventSub and Helix API Integration
 
-:copyright: (c) 2025-present Snifo
+:copyright: (c) 2025-present mrsnifo
 :license: MIT, see LICENSE for more details.
 """
 
 __title__ = 'twitch.py'
-__version__ = '3.2.10'
+__version__ = '4.0.0'
 __license__ = 'MIT License'
-__author__ = 'Snifo'
-__email__ = 'Snifo@mail.com'
-__github__ = 'https://github.com/mrsnifo/twitch.py'
+__author__ = 'mrsnifo'
+__copyright__ = 'Copyright 2025-present mrsnifo'
+__email__ = 'snifo@mail.com'
+__url__ = 'https://github.com/mrsnifo/twitch.py'
 
-from .user import *
-from .chat import *
-from .utils import *
-from .client import *
 from .errors import *
-from .stream import *
-from .channel import *
+from .models import *
+from .app import *
+
+from . import (
+    eventsub as eventsub,
+    oauth as oauth,
+    utils as utils,
+)

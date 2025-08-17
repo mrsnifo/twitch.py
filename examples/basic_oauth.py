@@ -1,32 +1,22 @@
-from twitch.ext.oauth import DeviceAuthFlow, Scopes
-from twitch import Client
-
-client = Client(client_id='YOUR_CLIENT_ID')
-
-# Setup Device Authentication Flow with necessary scopes.
-# This is required for obtaining user-specific access tokens.
-DeviceAuthFlow(
-    client=client,
-    scopes=[Scopes.USER_READ_EMAIL]
-)
+from twitch.oauth import DeviceCodeFlow, Scopes
+import asyncio
 
 
-@client.event
-async def on_code(code: str):
-    """Handles the device authorization code event."""
-    print(f'Verification URI: https://www.twitch.tv/activate?device-code={code}')
+async def main():
+    async with DeviceCodeFlow('CLIENT_ID', 'CLIENT_SECRET') as flow:
+        # Request device code with required scopes
+        device_code = await flow.request_device_code({Scopes.USER_READ_EMAIL})
+
+        # Display authorization instructions to user
+        print(f"Go to: {device_code.verification_uri}")
+        print(f"Enter code: {device_code.user_code}")
+
+        # Wait for user to authorize and receive access token
+        token = await flow.wait_for_device_token(device_code.device_code)
+        print(f"Access token: {token.access_token}")
+
+        # Add user to the flow with tokens for future use
+        await flow.add_user(token.access_token, token.refresh_token)
 
 
-@client.event
-async def on_auth(access_token: str, refresh_token: str):
-    """Handles the authentication event."""
-    print(f'access_token={access_token}\nrefresh_token={refresh_token}')
-
-
-@client.event
-async def on_ready():
-    """Handles the client ready event."""
-    print('PogU')
-
-
-client.run()
+asyncio.run(main())

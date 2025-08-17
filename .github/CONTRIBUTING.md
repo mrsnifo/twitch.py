@@ -1,63 +1,73 @@
-## Contributing Guidelines for twitch.py
+# Contributing to twitch.py
 
-Thank you for considering contributing to twitch.py! We welcome your contributions to help make this project better. To ensure a smooth and collaborative experience for everyone, please review and follow these guidelines:
+Hey there! Thanks for wanting to help make twitch.py better. Whether you're fixing a bug, adding a feature, or just improving documentation, we appreciate it.
 
-### Code of Conduct
+## Before You Start
 
-Please review our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing. We expect all contributors to adhere to these principles and maintain a respectful and inclusive environment for everyone.
+Quick heads up - check out our [Community Guidelines](CODE_OF_CONDUCT.md) first. Nothing fancy, just the basics of not being a jerk to each other.
 
-### How to Contribute
+## Getting Your Code In
 
-1. **Fork the Repository:** If you haven't already, fork the twitch.py repository to your GitHub account.
+### The Process
 
-2. **Clone Your Fork:** Clone your fork of the repository to your local machine.
+1. **Fork it** - Grab your own copy of the repo
+2. **Clone it locally**
+   ```bash
+   git clone https://github.com/mrsnifo/twitch.py.git
+   ```
+3. **Make a branch** - Give it a name that makes sense
+   ```bash
+   git checkout -b fix/eventsub-reconnection
+   # or
+   git checkout -b add/user-subscriptions
+   ```
+4. **Write your code** - Make it good, test it, don't break existing stuff
+5. **Commit with a decent message**
+   ```bash
+   git commit -m "Fix EventSub reconnection timeout handling"
+   ```
+6. **Push it up**
+   ```bash
+   git push origin your-branch-name
+   ```
+7. **Open a PR** - Tell us what you did and why
 
-    ```bash
-    git clone https://github.com/MrSnifo/twitch.py.git
-    ```
+### What Makes a Good PR
 
-3. **Create a New Branch:** Create a new branch for your contribution, using a descriptive name.
+- **Clear description** - What problem does this solve? How does it work?
+- **Tests included** - If you're adding features, add tests
+- **Documentation updated** - If you change how something works, update the docs
+- **No breaking changes** - Unless absolutely necessary (and you tell us why)
 
-    ```bash
-    git checkout -b feature/your-feature
-    ```
+## Found a Bug or Have an Idea?
 
-4. **Make Changes:** Work on your contribution, following our coding style and conventions.
+Check the [issues](https://github.com/mrsnifo/twitch.py/issues) first - someone might've already reported it. If not, open a new one with:
+- What you expected to happen
+- What actually happened  
+- Code to reproduce the issue (if applicable)
+- Your Python version and any relevant environment details
 
-5. **Test Your Changes:** Ensure that your changes are thoroughly tested and do not introduce any regressions.
+## Code Style
 
-6. **Commit Your Changes:** Commit your changes with a clear and concise message.
+We're not super strict, but try to:
+- Follow existing patterns in the codebase
+- Use meaningful variable names
+- Add docstrings for public methods
+- Keep functions reasonably sized
+- Use type hints where it makes sense
 
-    ```bash
-    git commit -m "Add your commit message here"
-    ```
+## Review Process
 
-7. **Push Your Changes:** Push your branch to your forked repository.
+I'll try to review PRs within a reasonable time. Might ask for changes or have questions - it's not personal, just want to keep things solid.
 
-    ```bash
-    git push origin feature/your-feature
-    ```
+Small fixes usually get merged quickly. Bigger features might need more discussion.
 
-8. **Open a Pull Request:** Go to the twitch.py repository on GitHub and open a pull request from your forked repository. Provide a detailed description of your changes, including any relevant information.
+## License
 
-### Issue Tracker
+By contributing, you're cool with your code being under the MIT License (same as the rest of the project).
 
-If you find a bug, have a feature request, or need help with something, please check our [Issue Tracker](https://github.com/MrSniFo/twitch.py/issues) to see if a similar issue has been raised. If not, feel free to open a new issue and provide as much detail as possible.
+## Questions?
 
-### Review Process
+Not sure about something? Just ask! Open an issue, send me an email at snifo@mail.com, or start a discussion.
 
-All contributions will go through a review process. Our maintainers will provide feedback and suggestions to help improve the quality and compatibility of your contribution.
-
-### Code Licensing
-
-By contributing to twitch.py, you agree that your code will be licensed under the [MIT License](https://github.com/MrSnifo/twitch.py/blob/main/LICENSE).
-
-### Respect Each Other
-
-Respect the opinions and ideas of other contributors. We encourage a positive and collaborative atmosphere where everyone's input is valued.
-
-### Stay Updated
-
-Stay engaged with the community and keep an eye on your pull requests and issues for feedback and updates. Contributions that align with the project's goals and standards are more likely to be merged.
-
-We appreciate your contributions to twitch.py, and together, we can make this project even better! If you have any questions or need assistance, please reach out to our maintainers. Thank you for being a part of our community!
+Thanks for helping make twitch.py awesome!

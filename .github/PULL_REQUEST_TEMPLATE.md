@@ -1,15 +1,19 @@
-## Pull Request
+## What's This About?
 
-### Description
-Please provide a brief description of the changes in this pull request.
+Tell us what you're fixing or adding. No need to write a novel - just enough so we understand what's happening.
 
-### Checklist
-Please check the following before submitting your pull request:
+## Testing
 
-- [ ] I have read and followed the project's contributing guidelines.
-- [ ] I have tested my changes locally and they work as expected.
-- [ ] I have added necessary documentation or updated existing documentation (if applicable).
-- [ ] I have written unit tests for the changes I've made (if applicable).
+How did you test this? What should we look out for when reviewing?
 
-### Additional Information
-Add any additional information or context about the pull request here.
+## Quick Checks
+
+- [ ] Actually tested this locally (it works, trust me)
+- [ ] Didn't break existing stuff
+- [ ] Updated docs if needed
+- [ ] Added tests for new features
+- [ ] Follows the existing code style
+
+## Anything Else?
+
+Got screenshots? Breaking changes? Weird edge cases we should know about? Spill it here.
