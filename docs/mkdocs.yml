@@ -79,6 +79,7 @@ nav:
   - Oauth:
       - Flows: 'reference/oauth/flows.md'
       - Scopes: 'reference/oauth/scopes.md'
+      - Models: 'reference/oauth/models.md'
   - Extensions:
       - Tasks: 'ext/tasks.md'
 
