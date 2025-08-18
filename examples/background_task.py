@@ -1,5 +1,5 @@
-from twitch.ext import tasks
 from twitch import UserAPI, App
+from twitch.ext import tasks
 import asyncio
 
 counter = 0
