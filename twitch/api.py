@@ -47,7 +47,7 @@ from .models import (
 )
 
 if TYPE_CHECKING:
-    from .state import ConnectionState
+    from .state import ConnectionState, ClientUserConnectionState
     from .http import PaginatedRequest
 
 __all__ = ('AppAPI', 'UserAPI')
@@ -1951,7 +1951,7 @@ class BaseAPI:
 
 
 class AppAPI(BaseAPI):
-    def __init__(self, app_user_id: str, *, state: ConnectionState):
+    def __init__(self, app_user_id: str, *, state: ConnectionState) -> None:
         super().__init__(app_user_id, state=state)
 
     async def send_chat_message(
@@ -2484,11 +2484,18 @@ class AppAPI(BaseAPI):
 
 class UserAPI(BaseAPI):
 
+    if TYPE_CHECKING:
+        _state: ClientUserConnectionState
+
     __slots__ = ('__weakref__',)
 
-    def __init__(self, user_id: str, *, state: ConnectionState):
+    def __init__(self, user_id: str, *, state: ClientUserConnectionState) -> None:
         super().__init__(user_id, state=state)
         self.id: str = user_id
+
+    async def delete_eventsub_subscription(self, subscription_id: str) -> None:
+        await super().delete_eventsub_subscription(subscription_id)
+        await self._state.remove_subscription(subscription_id=subscription_id, cost=None)
 
     @override
     async def get_channel_emotes(self, user_id: Optional[str] = None) -> Tuple[ChannelEmote, ...]:
