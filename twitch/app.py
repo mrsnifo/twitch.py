@@ -26,8 +26,8 @@ from __future__ import annotations
 
 from typing import  Any, Tuple, Type, Optional, TYPE_CHECKING
 from types import MappingProxyType, TracebackType
-from .errors import TokenError, BadRequest
 from .api import AppAPI, UserAPI
+from .errors import TokenError
 from .http import HTTPClient
 import aiohttp
 import logging

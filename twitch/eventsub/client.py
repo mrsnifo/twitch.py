@@ -24,11 +24,11 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from ..errors import HTTPException, NotFound, Unauthorized, BadRequest, TokenError
 from typing import Any, Callable, Type, Optional, Dict, Tuple, TYPE_CHECKING
+from ..errors import HTTPException, TokenError, Unauthorized, NotFound
 from ..state import ClientConnectionState, ClientUserConnectionState
+from .errors import ConnectionClosed, ShardError, ShardNotFound
 from .gateway import EventSubWebSocket, ReconnectWebSocket
-from .errors import ConnectionClosed, ShardError
 from .event import UserEvents, AppEvents
 from types import TracebackType
 from ..app import App
@@ -458,23 +458,19 @@ class ClientApp(BaseClient):
         """
         Connect to Twitch EventSub WebSocket with shard management.
 
-        !!! danger "Critical: Shard Management Required"
+        !!! danger "Important: Keep All Shards Connected"
 
-            **You MUST have active WebSocket connections for ALL shards in your conduit!**
+            **You need an active WebSocket connection for every shard in your conduit.**
 
-            If your conduit has 10 shards, you need 10 active WebSocket connections.
-            Having "dead" shards (shards without active connections) will cause missed events.
-            When a shard fails, messages are retried on other shards, but if multiple shards are dead, events will be lost.
-            **Always match your shard count to your actual active connections.**
+            If you have dead shards (no connection), you'll miss events.
+            Always keep your shard count equal to your active connections.
 
         Parameters
         ----------
         conduit_id: str
             The conduit ID for event subscriptions.
         shard_ids: Tuple[int, ...]
-            Tuple of shard IDs to use for connections. Only one shard connects at a time.
-            If reconnect is True and a shard fails, the next shard will be tried.
-            If only one shard ID is provided, failures will raise even with reconnect enabled.
+            Tuple of shard IDs to check for availability. The first non-enabled shard will be used for the connection.
         reconnect: bool
             Whether to automatically reconnect on connection failures.
 
@@ -482,6 +478,8 @@ class ClientApp(BaseClient):
         ------
         ShardError
             If shard identification fails.
+        ShardNotFound
+            If all provided shards are already enabled.
         TokenError
             If missing a valid app access token with required scopes.
         Unauthorized
@@ -494,8 +492,17 @@ class ClientApp(BaseClient):
         backoff = utils.ExponentialBackoff()
         ws_params = {}
 
-        shard_index = 0
-        shard_id = shard_ids[shard_index]
+        enabled_shards = self.application.get_conduit_shards(
+            conduit_id=conduit_id,
+            status='enabled',
+            limit=max(shard_ids) + 1
+        )
+
+        enabled_ids = {int(s.id) async for s in enabled_shards if s.status == 'enabled'}
+        shard_id = next((sid for sid in shard_ids if sid not in enabled_ids), None)
+
+        if shard_id is None:
+            raise ShardNotFound
 
         while not self.is_closed():
             try:
@@ -510,21 +517,17 @@ class ClientApp(BaseClient):
                 _logger.debug('WebSocket reconnecting to %s', exc.url)
                 ws_params['gateway'] = exc.url
 
-            except (NotFound, Unauthorized, BadRequest, TokenError):
-                raise
-
             except (OSError,
                     HTTPException,
                     ConnectionClosed,
-                    ShardError,
-                    TokenError,
                     aiohttp.ClientError,
                     asyncio.TimeoutError
                     ) as exc:
                 self.dispatch('disconnect')
-                if not reconnect:
+
+                if not reconnect or isinstance(exc, (TokenError, Unauthorized, NotFound)):
                     await self.close()
-                    if isinstance(exc, ShardError) and exc.code == 1000:
+                    if isinstance(exc, ConnectionClosed) and exc.code == 1000:
                         return
                     raise
 
@@ -534,14 +537,6 @@ class ClientApp(BaseClient):
                 if isinstance(exc, ConnectionClosed) and exc.code != 1000:
                     await self.close()
                     raise
-
-                if isinstance(exc, ShardError):
-                    if len(shard_ids) == 1:
-                        raise
-
-                    shard_index = (shard_index + 1) % len(shard_ids)
-                    shard_id = shard_ids[shard_index]
-                    _logger.error('Shard error occurred, switching to shard %s', shard_id, exc_info=exc)
 
                 delay = backoff.get_delay()
                 _logger.exception('Attempting reconnect in %d seconds', delay)

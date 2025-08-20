@@ -26,7 +26,7 @@ from aiohttp import ClientWebSocketResponse
 from ..errors import ClientException
 from typing import Optional
 
-__all__ = ('ConnectionClosed', 'ShardError')
+__all__ = ('ConnectionClosed', 'ShardError', 'ShardNotFound')
 
 class ConnectionClosed(ClientException):
     """Exception raised when the WebSocket connection is closed unexpectedly."""
@@ -57,3 +57,9 @@ class ShardError(ClientException):
         self.message: str = message
         super().__init__(f"Shard ID {shard_id} {message}")
 
+
+class ShardNotFound(ClientException):
+    """Exception raised when no available shards are found for connection."""
+
+    def __init__(self) -> None:
+        super().__init__("All provided shards are already enabled")

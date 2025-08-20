@@ -403,16 +403,12 @@ class MultiShardClientApp(ClientApp):
         """
         Connect to Twitch EventSub with multiple shards.
 
-        !!! danger "Critical: Shard Management Required"
+        !!! danger "Important: Keep All Shards Connected"
 
-            **You MUST have active WebSocket connections for ALL shards in your conduit!**
+            **You need an active WebSocket connection for every shard in your conduit.**
 
-            If your conduit has 10 shards, you need 10 active WebSocket connections.
-            Having "dead" shards (shards without active connections) will cause missed
-            events. When a shard fails, messages are retried on other shards, but if
-            multiple shards are dead, events will be lost.
-
-            **Always match your shard count to your actual active connections.**
+            If you have dead shards (no connection), you'll miss events.
+            Always keep your shard count equal to your active connections.
 
         Parameters
         ----------
