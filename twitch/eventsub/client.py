@@ -518,6 +518,7 @@ class ClientApp(BaseClient):
                 ws_params['gateway'] = exc.url
 
             except (OSError,
+                    TokenError,
                     HTTPException,
                     ConnectionClosed,
                     aiohttp.ClientError,
