@@ -547,19 +547,19 @@ class ClientApp(BaseClient):
         """
         Start the client by authorizing and connecting.
 
-        !!! warning "Shard Count Must Match Active Connections"
+        !!! danger "Important: Keep All Shards Connected"
 
-            Before calling this method, ensure your conduit's shard count matches the number of
-            active WebSocket connections you plan to maintain. Dead shards cause event loss!
+            **You need an active WebSocket connection for every shard in your conduit.**
+
+            If you have dead shards (no connection), you'll miss events.
+            Always keep your shard count equal to your active connections.
 
         Parameters
         ----------
         conduit_id: str
             The conduit ID for event subscriptions.
         shard_ids: Tuple[int, ...]
-            Tuple of shard IDs to use for connections. Only one shard connects at a time.
-            If reconnect is True and a shard fails, the next shard will be tried.
-            If only one shard ID is provided, failures will raise even with reconnect enabled.
+            Tuple of shard IDs to check for availability. The first non-enabled shard will be used for the connection.
         reconnect: bool
             Whether to automatically reconnect on connection failures.
         """
@@ -579,24 +579,19 @@ class ClientApp(BaseClient):
         """
         Run the client with event loop management.
 
-        !!! danger "Critical: Read Before Running"
+        !!! danger "Important: Keep All Shards Connected"
 
-            This is a blocking call that runs the client until stopped.
-            Sets up logging and handles the async context automatically.
+            **You need an active WebSocket connection for every shard in your conduit.**
 
-            **SHARD MANAGEMENT WARNING**
-
-            Your conduit must have the correct number of active shards to prevent event loss.
-            Do not create conduits with more shards than you have active WebSocket connections!
+            If you have dead shards (no connection), you'll miss events.
+            Always keep your shard count equal to your active connections.
 
         Parameters
         ----------
         conduit_id: str
             The conduit ID for event subscriptions.
         shard_ids: Tuple[int, ...]
-            Tuple of shard IDs to use for connections. Only one shard connects at a time.
-            If reconnect is True and a shard fails, the next shard will be tried.
-            If only one shard ID is provided, failures will raise even with reconnect enabled.
+            Tuple of shard IDs to check for availability. The first non-enabled shard will be used for the connection.
         reconnect: bool
             Whether to automatically reconnect on connection failures.
         log_handler: Optional[logging.Handler]
