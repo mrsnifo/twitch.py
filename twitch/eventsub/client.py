@@ -559,7 +559,7 @@ class ClientApp(BaseClient):
         conduit_id: str
             The conduit ID for event subscriptions.
         shard_ids: Tuple[int, ...]
-            Tuple of shard IDs to check for availability. The first non-enabled shard will be used for the connection.
+            Tuple of shard IDs to create connections for.
         reconnect: bool
             Whether to automatically reconnect on connection failures.
         """
@@ -591,7 +591,7 @@ class ClientApp(BaseClient):
         conduit_id: str
             The conduit ID for event subscriptions.
         shard_ids: Tuple[int, ...]
-            Tuple of shard IDs to check for availability. The first non-enabled shard will be used for the connection.
+            Tuple of shard IDs to create connections for.
         reconnect: bool
             Whether to automatically reconnect on connection failures.
         log_handler: Optional[logging.Handler]
