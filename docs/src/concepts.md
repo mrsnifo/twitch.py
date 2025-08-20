@@ -22,7 +22,7 @@ Real-time notifications for follows, subs, chat messages, etc. Inherits from App
 
 **ClientUser**: Single user only. EventSub can only use one access token per connection, so this is for personal tools. Has access to user-specific EventSub subscriptions that ClientApp can't use.
 
-ClientApp: Most common. For bots handling multiple users/channels. Uses availability-based shard selection to connect to the first available shard in your conduit.
+**ClientApp**: Most common. For bots handling multiple users/channels. Uses availability-based shard selection to connect to the first available shard in your conduit.
 
 **MultiShardClientApp**: Production scale. Creates multiple WebSocket connections instead of switching shards. Some larger bots use around 20 shards or less.
 
