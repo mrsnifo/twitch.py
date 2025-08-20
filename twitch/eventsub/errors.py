@@ -60,3 +60,4 @@ class ShardError(ClientException):
 
 class ShardNotFound(ClientException):
     """Exception raised when no available shards are found for connection."""
+    pass
