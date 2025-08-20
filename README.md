@@ -54,7 +54,7 @@ async def on_ready():
     user = await client.add_user('ACCESS_TOKEN')
     await client.eventsub.channel_chat_message(broadcaster_user_id=user.id, user_id=user.id)
 
-# Switches between shards if one fails. For multi-sharding use MultiShardClientApp.
+# Uses availability-based shard selection. For multi-sharding use MultiShardClientApp.
 client.run('CONDUIT_ID', shard_ids=(0,))
 ```
 
