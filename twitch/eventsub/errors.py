@@ -60,6 +60,3 @@ class ShardError(ClientException):
 
 class ShardNotFound(ClientException):
     """Exception raised when no available shards are found for connection."""
-
-    def __init__(self) -> None:
-        super().__init__("All provided shards are already enabled")

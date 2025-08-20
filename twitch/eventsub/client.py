@@ -502,7 +502,7 @@ class ClientApp(BaseClient):
         shard_id = next((sid for sid in shard_ids if sid not in enabled_ids), None)
 
         if shard_id is None:
-            raise ShardNotFound
+            raise ShardNotFound("All provided shards are already enabled")
 
         while not self.is_closed():
             try:
