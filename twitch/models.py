@@ -69,6 +69,7 @@ __all__ = (
     # Monetization
     'StarCommercial', 'BitsLeaderboardEntry', 'Charity', 'CharityCampaign',
     'CharityDonation', 'CreatorGoal', 'Contribution', 'HypeTrainEvent',
+    'HypeTrainRecord', 'CurrentHypeTrain', 'HypeTrainStatus',
 
     # Polls & Predictions
     'Poll', 'PollChoice', 'Prediction', 'Outcome',
@@ -3121,6 +3122,152 @@ class HypeTrainEvent(NamedTuple):
         return f"HypeTrainEvent(id={self.id!r}, level={self.level})"
 
 
+class HypeTrainRecord(NamedTuple):
+    """
+    Represents a Hype Train record.
+
+    Attributes
+    ----------
+    level: int
+        The level achieved in this Hype Train record.
+    total: int
+        The total points/contributions achieved.
+    achieved_at: datetime
+        The time when this record was achieved.
+    """
+
+    level: int
+    total: int
+    achieved_at: datetime
+
+    def __repr__(self):
+        return f"HypeTrainRecord(level={self.level}, total={self.total})"
+
+
+class CurrentHypeTrain(NamedTuple):
+    """
+    Represents the current active Hype Train.
+
+    Attributes
+    ----------
+    id: str
+        The unique identifier for this Hype Train.
+    broadcaster: UserIdentity
+        The broadcaster whose channel the Hype Train is taking place in.
+    level: int
+        The current level of the Hype Train.
+    total: int
+        The total contributions made to this Hype Train.
+    progress: int
+        The current progress towards the next level.
+    goal: int
+        The goal amount needed to reach the next level.
+    top_contributions: Tuple[Contribution, ...]
+        The top contributors to this Hype Train.
+    shared_train_participants: Optional[Tuple[UserIdentity, ...]]
+        Participants in shared Hype Train events, if applicable.
+    started_at: datetime
+        The time when this Hype Train started.
+    expires_at: datetime
+        The time when this Hype Train will expire.
+    type: str
+        The type of Hype Train. Possible values are: treasure, golden_kappa, regular.
+    """
+
+    id: str
+    broadcaster: UserIdentity
+    level: int
+    total: int
+    progress: int
+    goal: int
+    top_contributions: Tuple[Contribution, ...]
+    shared_train_participants: Optional[Tuple[UserIdentity, ...]]
+    started_at: datetime
+    expires_at: datetime
+    type: str
+
+    @classmethod
+    def from_data(cls, data: helix.CurrentHypeTrain) -> CurrentHypeTrain:
+        return cls(
+            id=data['id'],
+            broadcaster=UserIdentity(
+                id=data['broadcaster_user_id'],
+                login=data['broadcaster_user_login'],
+                name=data['broadcaster_user_name']
+            ),
+            level=data['level'],
+            total=data['total'],
+            progress=data['progress'],
+            goal=data['goal'],
+            top_contributions=tuple(
+                Contribution(
+                    user=UserIdentity(
+                        id=contrib['user_id'],
+                        login=contrib['user_login'],
+                        name=contrib['user_name']
+                    ),
+                    type=contrib['type'],
+                    total=contrib['total']
+                ) for contrib in data['top_contributions']
+            ),
+            shared_train_participants=tuple(
+                UserIdentity(
+                    id=participant['broadcaster_user_id'],
+                    login=participant['broadcaster_user_login'],
+                    name=participant['broadcaster_user_name']
+                ) for participant in data['shared_train_participants']
+            ) if data.get('shared_train_participants', None) else None,
+            started_at=from_iso_string(data['started_at']),
+            expires_at=from_iso_string(data['expires_at']),
+            type=data['type']
+        )
+
+    def __repr__(self) -> str:
+        return f"CurrentHypeTrain(id={self.id!r}, level={self.level}, type={self.type!r})"
+
+
+class HypeTrainStatus(NamedTuple):
+    """
+    Represents comprehensive Hype Train data including current and historical records.
+
+    Attributes
+    ----------
+    current: Optional[CurrentHypeTrain]
+        The currently active Hype Train, if any.
+    all_time_high: Optional[HypeTrainRecord]
+        The all-time high Hype Train record for this channel.
+    shared_all_time_high: Optional[HypeTrainRecord]
+        The all-time high shared Hype Train record, if applicable.
+    raw: MappingProxyType[str, Any]
+        A shallow-frozen dictionary representing the original payload.
+    """
+
+    current: Optional[CurrentHypeTrain]
+    all_time_high: Optional[HypeTrainRecord]
+    shared_all_time_high: Optional[HypeTrainRecord]
+    raw: helix.HypeTrainStatus
+
+    @classmethod
+    def from_data(cls, data: helix.HypeTrainStatus) -> HypeTrainStatus:
+        return cls(
+            current=CurrentHypeTrain.from_data(data['current']) if data.get('current', None) else None,
+            all_time_high=HypeTrainRecord(
+                level=data['all_time_high']['level'],
+                total=data['all_time_high']['total'],
+                achieved_at=from_iso_string(data['all_time_high']['achieved_at'])
+            ) if data.get('all_time_high', None) else None,
+            shared_all_time_high=HypeTrainRecord(
+                level=data['shared_all_time_high']['level'],
+                total=data['shared_all_time_high']['total'],
+                achieved_at=from_iso_string(data['shared_all_time_high']['achieved_at'])
+            ) if data.get('shared_all_time_high', None) else None,
+            raw=MappingProxyType(data)  # type: ignore
+        )
+
+    def __repr__(self) -> str:
+        return f"HypeTrainStatus()"
+
+
 class AutoModSettings(NamedTuple):
     """
     Represents AutoMod settings.
@@ -3224,7 +3371,6 @@ class AutoModStatusMessage(NamedTuple):
 
     def __repr__(self) -> str:
         return f"AutoModStatusMessage(msg_id={self.msg_id!r})"
-
 
 
 class BannedUser(NamedTuple):

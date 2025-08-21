@@ -1938,10 +1938,10 @@ class HTTPClient:
         route = Route('GET', 'channels/followers', broadcaster_id=broadcaster_id, user_id=user_id_check)
         return PaginatedRequest(self.request, route=route, user_id=user_id, fetch_limit=fetch_limit, max_first=100)
 
-    def get_stream_key(self,
-                       user_id: str,
-                       /,
-                       broadcaster_id: str
-                       ) -> Response[DataL[helix.StreamKey]]:
+    def get_stream_key(self, user_id: str, /, broadcaster_id: str) -> Response[DataL[helix.StreamKey]]:
         route = Route('GET', 'streams/key', broadcaster_id=broadcaster_id)
+        return self.request(route, user_id=user_id)
+
+    def get_hype_train_status(self, user_id: str, /, broadcaster_id: str) -> Response[DataL[helix.HypeTrainStatus]]:
+        route = Route('GET', 'hypetrain/status', broadcaster_id=broadcaster_id)
         return self.request(route, user_id=user_id)

@@ -306,6 +306,18 @@ icon: simple/databricks
 
 ---
 
+## ::: twitch.models.HypeTrainStatus
+ 
+---
+
+## ::: twitch.models.HypeTrainRecord
+
+---
+
+## ::: twitch.models.CurrentHypeTrain
+
+---
+
 ## ::: twitch.models.Poll
 
 ---

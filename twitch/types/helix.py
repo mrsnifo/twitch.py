@@ -31,6 +31,11 @@ class BaseUser(TypedDict):
     user_login: str
     user_name: str
 
+class BaseUserBroadcaster(TypedDict):
+    broadcaster_user_id: str
+    broadcaster_user_login: str
+    broadcaster_user_name: str
+
 class BaseBroadcaster(TypedDict):
     broadcaster_id: str
     broadcaster_login: str
@@ -91,7 +96,6 @@ class StarCommercial(TypedDict):
 
 
 class CheermoteTier(TypedDict):
-    """Represents a tier level for a Cheermote."""
     min_bits: int
     id: str
     color: str
@@ -100,7 +104,6 @@ class CheermoteTier(TypedDict):
     show_in_bits_card: bool
 
 class Cheermote(TypedDict):
-    """Represents a single Cheermote object."""
     prefix: str
     tiers: List[CheermoteTier]
     type: Literal[
@@ -696,3 +699,25 @@ class UserActiveExtensionUpdate(TypedDict):
     panel: List[ExtensionPanel]
     overlay: List[ExtensionOverlay]
     component: List[ExtensionComponent]
+
+class HypeTrainRecord(TypedDict):
+    level: int
+    total: int
+    achieved_at: str
+
+class CurrentHypeTrain(BaseUserBroadcaster):
+    id: str
+    level: int
+    total: int
+    progress: int
+    goal: int
+    top_contributions: List[Contribution]
+    shared_train_participants: Optional[List[BaseUserBroadcaster]]
+    started_at: str
+    expires_at: str
+    type: Literal['treasure', 'golden_kappa', 'regular']
+
+class HypeTrainStatus(TypedDict):
+    current: Optional[CurrentHypeTrain]
+    all_time_high: Optional[HypeTrainRecord]
+    shared_all_time_high: Optional[HypeTrainRecord]

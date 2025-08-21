@@ -35,7 +35,7 @@ from .models import (
     ChannelInfo, UserInfo, ChannelFollower, FollowedChannel, ChannelEditor, ChannelVIP, ChannelTeam, TeamUsers,
     Video, Clip, StreamInfo, StreamMarker, ContentClassificationLabel, ChannelStreamSchedule,
     AutoModSettings, BannedUser, UnbanRequest, BlockedTerm, Moderator, ShieldModeStatus, WarnReason, Raid,
-    Poll, Prediction, CreatorGoal, HypeTrainEvent,
+    Poll, Prediction, CreatorGoal, HypeTrainEvent, HypeTrainStatus,
     StarCommercial, Subscription, UserSubscription, BitsLeaderboardEntry, CharityCampaign, CharityDonation,
     AdSchedule, AdSnooze, AutoModStatusMessage,
     UserExtension, ActiveUserExtension, UserActiveExtensionUpdate, ExtensionTransaction, ExtensionBitsProduct,
@@ -3364,6 +3364,35 @@ class UserAPI(BaseAPI):
             HypeTrainEvent.from_data(item) for item in data['data']
         )
         return paginated_request
+
+    async def get_hype_train_status(self) -> HypeTrainStatus:
+        """
+        Gets the Hype Train status for the broadcaster.
+
+        Token and Authorization Requirements::
+
+        | Token Type  | Required Scopes         | Authorization Requirements      |
+        |-------------|-------------------------|---------------------------------|
+        | User Access | channel:read:hype_train | Token holder is the broadcaster |
+
+        Returns
+        -------
+        HypeTrainStatus
+            The current Hype Train status including current train and records.
+
+        Raises
+        ------
+        TokenError
+            If missing user token with scope.
+        BadRequest
+            If broadcaster_id is invalid.
+        Unauthorized
+            If token invalid.
+        Forbidden
+            If the token user is not the broadcaster.
+        """
+        data = await self._state.http.get_hype_train_status(self.id, broadcaster_id=self.id)
+        return HypeTrainStatus.from_data(data['data'][0])
 
     async def check_automod_status(self,
                                    messages: List[Dict[str, Any]],
