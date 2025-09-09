@@ -3332,7 +3332,7 @@ class UserAPI(BaseAPI):
 
         !!! warning
 
-            DEPRECATED Scheduled for removal on December 4, 2025. Use [Get Hype Train Status](#twitch.api.UserAPI.get_hype_train_status) instead.
+            DEPRECATED Scheduled for removal on December 4, 2025. Use [Get Hype Train Status](../app/classes.md#twitch.api.UserAPI.get_hype_train_status) instead.
 
         Token and Authorization Requirements::
 
