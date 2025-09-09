@@ -3330,9 +3330,9 @@ class UserAPI(BaseAPI):
         """
         Gets the Hype Train events for the broadcaster.
 
-        !!! Warning
+        !!! warning
 
-            DEPRECATED Scheduled for removal on December 4, 2025. Use “Get Hype Train Status” instead.
+            DEPRECATED Scheduled for removal on December 4, 2025. Use [Get Hype Train Status](#twitch.api.UserAPI.get_hype_train_status) instead.
 
         Token and Authorization Requirements::
 
