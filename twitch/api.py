@@ -3330,6 +3330,10 @@ class UserAPI(BaseAPI):
         """
         Gets the Hype Train events for the broadcaster.
 
+        !!! Warning
+
+            DEPRECATED Scheduled for removal on December 4, 2025. Use “Get Hype Train Status” instead.
+
         Token and Authorization Requirements::
 
         | Token Type  | Required Scopes         | Authorization Requirements      |
