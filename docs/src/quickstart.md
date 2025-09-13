@@ -1,5 +1,5 @@
 ---
-title: "Twitch.py Quickstart - Build a Twitch Bot in Python in 5 Minutes"
+title: "twitch.py Quickstart - Build a Twitch Bot in Python in 5 Minutes"
 description: "Get started with twitch.py. Learn how to install the library, set up your Twitch app, and choose the right approach for your bot with code examples for App, ClientUser, and ClientApp."
 icon: material/clock-start
 hide:
