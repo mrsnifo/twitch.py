@@ -1,6 +1,6 @@
 ---
-title: "TwitchPy Core Concepts - App, EventSub, and OAuth Explained"
-description: "Understand the three core components of TwitchPy: the main App class for API calls, EventSub for real-time notifications, and OAuth for authentication. Learn which tool to use for your bot or application."
+title: "twitch.py Core Concepts - App, EventSub, and OAuth Explained"
+description: "Understand the three core components of twitch.py: the main App class for API calls, EventSub for real-time notifications, and OAuth for authentication. Learn which tool to use for your bot or application."
 icon: octicons/question-16
 search:
   exclude: true
