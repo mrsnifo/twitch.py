@@ -8,6 +8,9 @@ icon: material/code-equal
 
 ## ::: twitch.api.UserAPI
 
+---
+
+## ::: twitch.api.BaseAPI
 
 ---
 
