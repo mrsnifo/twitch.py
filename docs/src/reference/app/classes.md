@@ -8,7 +8,6 @@ icon: material/code-equal
 
 ## ::: twitch.api.UserAPI
 
-
 ---
 
 ## ::: twitch.http.PaginatedRequest
