@@ -1,4 +1,5 @@
 ---
+title: "Welcome"
 description: "Build Twitch applications and bots with full EventSub support. A modern, async Python library for real-time notifications, Helix API access, and authentication."
 icon: material/broadcast
 hide:
