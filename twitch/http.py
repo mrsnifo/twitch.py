@@ -501,7 +501,7 @@ class HTTPClient:
         route = Route.oauth2('POST', path='token')
         return self.request(route, auth=False, data=body)
 
-    def device_code_request(self, scopes: Set[str]) -> Response[DeviceCode]:
+    def request_device_code(self, scopes: Set[str]) -> Response[DeviceCode]:
         body = {
             'client_id': self.client_id,
             'scopes': ' '.join(scopes)
@@ -509,12 +509,37 @@ class HTTPClient:
         route = Route.oauth2('POST', path='device')
         return self.request(route, auth=False, data=body)
 
-    def device_token_request(self, device_code: str) -> Response[Token]:
+    def get_device_token(self, device_code: str) -> Response[Token]:
         body = {
             'client_id': self.client_id,
             'client_secret': self.client_secret,
             'device_code': device_code,
             'grant_type': 'urn:ietf:params:oauth:grant-type:device_code'
+        }
+        route = Route.oauth2('POST', path='token')
+        return self.request(route, auth=False, data=body)
+
+    def get_authorization_url(self, redirect_uri: str, scopes: Set[str], state: str = None,
+                              force_verify: bool = False) -> str:
+        route = Route.oauth2(
+            'GET',
+            'authorize',
+            response_type='code',
+            client_id=self.client_id,
+            redirect_uri=redirect_uri,
+            scope=' '.join(scopes),
+            state=state,
+            force_verify=force_verify
+        )
+        return route.url
+
+    def get_authorization_token(self, code: str, redirect_uri: str) -> Response[Token]:
+        body = {
+            'client_id': self.client_id,
+            'client_secret': self.client_secret,
+            'code': code,
+            'grant_type': 'authorization_code',
+            'redirect_uri': redirect_uri
         }
         route = Route.oauth2('POST', path='token')
         return self.request(route, auth=False, data=body)

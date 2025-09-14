@@ -24,13 +24,13 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from typing import Set, Optional
 from ..errors import BadRequest
-from typing import Set
 from ..app import App
 from . import models
 import asyncio
 
-__all__ = ('DeviceCodeFlow', )
+__all__ = ('DeviceCodeFlow', 'AuthorizationCodeGrantFlow')
 
 
 class BaseFlow(App):
@@ -146,7 +146,7 @@ class BaseFlow(App):
 
 class DeviceCodeFlow(BaseFlow):
     """
-    OAuth2 Device Code Flow implementation for Twitch.
+    OAuth2 Device Code Flow.
 
     This flow is designed for devices that either lack a browser or have
     limited input capabilities. The user authorizes the application on
@@ -243,7 +243,7 @@ class DeviceCodeFlow(BaseFlow):
         Forbidden
             If the client is not authorized for device flow.
         """
-        data = await self.http.device_code_request(scopes)
+        data = await self.http.request_device_code(scopes)
         return models.DeviceCode.from_data(data)
 
     async def get_device_token(self, device_code: str) -> models.Token:
@@ -269,7 +269,7 @@ class DeviceCodeFlow(BaseFlow):
         BadRequest
             If the device code is invalid, expired, or authorization is still pending.
         """
-        data = await self.http.device_token_request(device_code)
+        data = await self.http.get_device_token(device_code)
         return models.Token.from_data(data)
 
     async def wait_for_device_token(
@@ -324,3 +324,175 @@ class DeviceCodeFlow(BaseFlow):
                 await asyncio.sleep(interval * 1.2)
 
         return await asyncio.wait_for(_poll_for_token(), timeout=timeout)
+
+
+class AuthorizationCodeGrantFlow(BaseFlow):
+    """
+    OAuth2 Authorization Code Grant Flow.
+
+    This flow is designed for web applications that can securely store
+    a client secret and handle HTTP redirects. Users are redirected to
+    Twitch to authorize the application, then redirected back with an
+    authorization code that can be exchanged for tokens.
+
+    ???+ tip
+
+        This flow is ideal for web applications with server-side components
+        that can handle HTTP redirects and store secrets securely.
+
+    Examples
+    --------
+    With FastAPI Server::
+
+        from twitch.oauth import AuthorizationCodeGrantFlow
+        from fastapi.responses import RedirectResponse
+        from contextlib import asynccontextmanager
+        from fastapi import FastAPI
+        import uvicorn
+
+        flow = AuthorizationCodeGrantFlow('CLIENT_ID', 'CLIENT_SECRET')
+
+        @asynccontextmanager
+        async def lifespan(_):
+            await flow.authorize()
+            yield
+            await flow.close()
+
+        app = FastAPI(lifespan=lifespan)
+
+        @app.get('/login')
+        def login():
+            auth_url = flow.get_authorization_url(
+                redirect_uri='http://localhost:3000/callback',
+                scopes={'user:read:email'}
+            )
+            return RedirectResponse(url=auth_url)
+
+        @app.get('/callback')
+        async def callback(code: str):
+            token = await flow.get_authorization_token(code=code, redirect_uri='http://localhost:3000/callback')
+            return token.raw
+
+        uvicorn.run(app, host='localhost', port=3000)
+
+    Manual::
+
+        flow = AuthorizationCodeGrantFlow('CLIENT_ID', 'CLIENT_SECRET')
+        await flow.authorize()
+
+        # Generate auth URL for user
+        auth_url = flow.get_authorization_url(
+            redirect_uri='http://localhost:3000/callback',
+            scopes={'user:read:email'}
+        )
+        print(f'Visit: {auth_url}')
+
+        # After getting code from callback, exchange for token
+        code = input("Enter the code from the callback URL: ")
+        token = await flow.get_authorization_token(code, 'http://localhost:3000/callback')
+        await flow.close()
+    """
+
+    @classmethod
+    def from_app(cls, app: App) -> AuthorizationCodeGrantFlow:
+        """
+        Create a AuthorizationCodeGrantFlow instance from an existing App with authorization.
+
+        !!! danger
+
+            The provided App instance must already be authenticated before
+            calling this method.
+
+        Parameters
+        ----------
+        app: App
+            An existing App instance that should already be authorized.
+            The flow will inherit the app's client credentials and current token.
+
+        Returns
+        -------
+        AuthorizationCodeGrantFlow
+            A new AuthorizationCodeGrantFlow instance that's already authorized with
+            the app's token.
+
+        Raises
+        ------
+        IndexError
+            If the app has no tokens available.
+        """
+        flow_instance = cls(app.http.client_id, app.http.client_secret)
+        return flow_instance
+
+    def get_authorization_url(
+            self,
+            redirect_uri: str,
+            scopes: Set[str] = frozenset(),
+            state: Optional[str] = None,
+            force_verify: bool = False
+    ) -> str:
+        """
+        Generate the authorization URL for the authorization code grant flow.
+
+        Creates a URL that users should visit to authorize your application.
+        After authorization, Twitch will redirect them to your redirect_uri
+        with an authorization code.
+
+        Parameters
+        ----------
+        redirect_uri: str
+            Your app's registered redirect URI. The authorization code will
+            be sent to this URI after user authorization.
+        scopes: Set[str]
+            Set of OAuth scopes to request for the token. If empty,
+            default scopes will be used.
+        state: Optional[str]
+            A randomly generated string to help prevent CSRF attacks.
+            Strongly recommended for security.
+        force_verify: bool
+            Whether to force the user to re-authorize your app's access
+            to their resources. Default is False.
+
+        Returns
+        -------
+        str
+            The authorization URL that users should visit to authorize
+            your application.
+        """
+        data = self.http.get_authorization_url(redirect_uri, scopes, state, force_verify)
+        return data
+
+    async def get_authorization_token(self, code: str, redirect_uri: str) -> models.Token:
+        """
+        Exchange an authorization code for an access token and refresh token.
+
+        After the user authorizes your application, Twitch redirects them to
+        your redirect URI with an authorization code. Use this method to
+        exchange that code for usable access and refresh tokens.
+
+        Parameters
+        ----------
+        code: str
+            The authorization code returned from the authorization step.
+            This is provided in the 'code' query parameter of the callback URL.
+        redirect_uri: str
+            Your app's registered redirect URI. This must exactly match
+            the redirect_uri used in get_authorization_url().
+
+        Returns
+        -------
+        Token
+            Contains access_token, refresh_token, expires_in, scopes,
+            and token_type information.
+
+        Raises
+        ------
+        BadRequest
+            If the authorization code is invalid, expired, or the
+            redirect_uri doesn't match.
+        Unauthorized
+            If the client credentials are invalid.
+        Forbidden
+            If the client is not authorized for this grant type.
+        """
+        data = await self.http.get_authorization_token(code, redirect_uri)
+        return models.Token.from_data(data)
