@@ -343,5 +343,3 @@ icon: simple/databricks
 ---
 
 ## ::: twitch.models.DropsEntitlementUpdate
-
-

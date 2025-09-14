@@ -7,4 +7,3 @@ icon: fontawesome/solid/xmarks-lines
 ---
 
 ## ::: twitch.eventsub.errors.ShardError
-

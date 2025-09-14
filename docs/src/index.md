@@ -40,3 +40,4 @@ A Python library for building Twitch applications with real-time events and API 
 
 * **Issues**: [Report bugs or request features](https://github.com/mrsnifo/twitch.py/issues)
 * **Discord**: [Twitch API](https://discord.gg/UFTkgnse7d)
+
