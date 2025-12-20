@@ -80,4 +80,4 @@ More usage examples available in the examples folder.
 
 ## Links
 - [Documentation](https://twitchpy.readthedocs.io/latest/)
-- [Twitch API](https://discord.gg/UFTkgnse7d)
+- [Twitch API](https://discord.gg/vEmQ4ZRgMM)
