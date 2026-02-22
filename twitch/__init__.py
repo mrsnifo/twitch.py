@@ -8,7 +8,7 @@ Real-time Twitch EventSub and Helix API Integration
 """
 
 __title__ = 'twitch.py'
-__version__ = '4.0.3'
+__version__ = '4.0.4'
 __license__ = 'MIT License'
 __author__ = 'mrsnifo'
 __copyright__ = 'Copyright 2025-present mrsnifo'

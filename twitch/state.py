@@ -111,7 +111,7 @@ class ConnectionState:
         try:
             return self._users[user_id]
         except KeyError:
-            user = UserAPI(user_id, state=self)
+            user = UserAPI(user_id, state=self)  # type: ignore
             self._users[user_id] = user
             return user
 
@@ -221,8 +221,6 @@ class ClientConnectionState(ConnectionState):
             ):
                 return subscription
         return None
-
-
 
     def clear(self):
         super().clear()

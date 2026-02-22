@@ -475,7 +475,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_chat_clear_v1(message: Event[ChannelChatClearEvent]):
+            async def on_channel_chat_clear_v1(message: Event[ChannelChatClearEvent]):
                 ...
         """
         condition = {
@@ -538,7 +538,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_chat_clear_user_messages_v1(message: Event[ChannelChatClearUserMessagesEvent]):
+            async def on_channel_chat_clear_user_messages_v1(message: Event[ChannelChatClearUserMessagesEvent]):
                 ...
         """
         condition = {
@@ -551,7 +551,7 @@ class _BaseEvents:
             subscription_condition=condition
         )
 
-    async def channel_chat_message(
+    async def chat_message(
             self,
             broadcaster_user_id: str,
             user_id: str,
@@ -666,7 +666,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_chat_message_delete_v1(message: Event[ChannelChatMessageDeleteEvent]):
+            async def on_channel_chat_message_delete_v1(message: Event[ChannelChatMessageDeleteEvent]):
                 ...
         """
         condition = {
@@ -729,7 +729,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_chat_notification_v1(message: Event[ChannelChatNotificationEvent]):
+            async def on_channel_chat_notification_v1(message: Event[ChannelChatNotificationEvent]):
                 ...
         """
         condition = {
@@ -792,7 +792,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_chat_settings_update_v1(message: Event[ChannelChatSettingsUpdateEvent]):
+            async def on_channel_chat_settings_update_v1(message: Event[ChannelChatSettingsUpdateEvent]):
                 ...
         """
         condition = {
@@ -855,7 +855,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_chat_user_message_hold_v1(message: Event[ChannelChatUserMessageHoldEvent]):
+            async def on_channel_chat_user_message_hold_v1(message: Event[ChannelChatUserMessageHoldEvent]):
                 ...
         """
         condition = {
@@ -918,7 +918,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_chat_user_message_update_v1(message: Event[ChannelChatUserMessageUpdateEvent]):
+            async def on_channel_chat_user_message_update_v1(message: Event[ChannelChatUserMessageUpdateEvent]):
                 ...
         """
         condition = {
@@ -978,7 +978,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_shared_chat_begin_v1(message: Event[ChannelSharedChatBeginEvent]):
+            async def on_channel_shared_chat_begin_v1(message: Event[ChannelSharedChatBeginEvent]):
                 ...
         """
         condition = {
@@ -1037,7 +1037,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_shared_chat_update_v1(message: Event[ChannelSharedChatUpdateEvent]):
+            async def on_channel_shared_chat_update_v1(message: Event[ChannelSharedChatUpdateEvent]):
                 ...
         """
         condition = {
@@ -1097,7 +1097,7 @@ class _BaseEvents:
         Version 1::
 
             @client.event
-            async def on_shared_chat_end_v1(message: Event[ChannelSharedChatEndEvent]):
+            async def on_channel_shared_chat_end_v1(message: Event[ChannelSharedChatEndEvent]):
                 ...
         """
         condition = {
@@ -1425,7 +1425,7 @@ class AppEvents(_BaseEvents):
         Version 1::
 
             @client.event
-            async def on_conduit_shard_disabled_v1_raw(message: Event[Dict[str, Any]):
+            async def on_conduit_shard_disabled_v1(message: Event[Dict[str, Any]]):
                 ...
         """
         condition = {}
@@ -1761,7 +1761,7 @@ class UserEvents(_BaseEvents):
         )
 
     @override
-    async def channel_chat_message(
+    async def chat_message(
             self,
             broadcaster_user_id: Optional[str] = None,
             user_id: Optional[str] = None,
@@ -2914,14 +2914,14 @@ class UserEvents(_BaseEvents):
         Version 1::
 
             @client.event
-            async def on_channel_points_auto_reward_v1(
+            async def on_channel_points_automatic_reward_redemption_add_v1(
                 message: Event[ChannelPointsAutomaticRewardRedemptionAddEventV1]):
                 ...
 
         Version 2::
 
             @client.event
-            async def on_channel_points_auto_reward_v2(
+            async def on_channel_points_automatic_reward_redemption_add_v2(
                 message: Event[ChannelPointsAutomaticRewardRedemptionAddEventV2]):
                 ...
         """
@@ -2980,7 +2980,7 @@ class UserEvents(_BaseEvents):
         Version 1::
 
             @client.event
-            async def on_channel_reward_add_v1(message: Event[ChannelPointsCustomRewardAddEvent]):
+            async def on_channel_points_custom_reward_add_v1(message: Event[ChannelPointsCustomRewardAddEvent]):
                 ...
         """
         condition = {
@@ -3041,7 +3041,7 @@ class UserEvents(_BaseEvents):
         Version 1::
 
             @client.event
-            async def on_channel_reward_update_v1(message: Event[ChannelPointsCustomRewardUpdateEvent]):
+            async def on_channel_points_custom_reward_update_v1(message: Event[ChannelPointsCustomRewardUpdateEvent]):
                 ...
         """
         condition = {
@@ -3104,7 +3104,7 @@ class UserEvents(_BaseEvents):
         Version 1::
 
             @client.event
-            async def on_channel_reward_remove_v1(message: Event[ChannelPointsCustomRewardRemoveEvent]):
+            async def on_channel_points_custom_reward_remove_v1(message: Event[ChannelPointsCustomRewardRemoveEvent]):
                 ...
         """
         condition = {
@@ -3167,7 +3167,7 @@ class UserEvents(_BaseEvents):
         Version 1::
 
             @client.event
-            async def on_channel_reward_redeem_add_v1(
+            async def on_channel_points_custom_reward_redemption_add_v1(
                 message: Event[ChannelPointsCustomRewardRedemptionAddEvent]):
                 ...
         """
@@ -3231,7 +3231,7 @@ class UserEvents(_BaseEvents):
         Version 1::
 
             @client.event
-            async def on_channel_reward_redeem_update_v1(
+            async def on_channel_points_custom_reward_redemption_update_v1(
                 message: Event[ChannelPointsCustomRewardRedemptionUpdateEvent]):
                 ...
         """
@@ -4528,7 +4528,7 @@ class UserEvents(_BaseEvents):
         Version 1::
 
             @client.event
-            async def on_channel_hype_train_begin_v2_raw(message: Event[Dict[str, Any]):
+            async def on_channel_hype_train_begin_v2(message: Event[Dict[str, Any]]):
                 ...
         """
         condition = {
@@ -4586,7 +4586,7 @@ class UserEvents(_BaseEvents):
         Version 2::
 
             @client.event
-            async def on_channel_hype_train_progress_v2_raw(message: Event[Dict[str, Any]]):
+            async def on_channel_hype_train_progress_v2(message: Event[Dict[str, Any]]):
                 ...
         """
         condition = {
@@ -4644,7 +4644,7 @@ class UserEvents(_BaseEvents):
         Version 2::
 
             @client.event
-            async def on_channel_hype_train_end_v2_raw(message: Event[Dict[str, Any]]):
+            async def on_channel_hype_train_end_v2(message: Event[Dict[str, Any]]):
                 ...
         """
         condition = {
@@ -4956,7 +4956,7 @@ class UserEvents(_BaseEvents):
         Beta::
 
             @client.event
-            async def on_channel_guest_star_session_begin_beta_raw(message: Event[Dict[str, Any]]):
+            async def on_channel_guest_star_session_begin_beta(message: Event[Dict[str, Any]]):
                 ...
         """
         condition = {
@@ -5024,7 +5024,7 @@ class UserEvents(_BaseEvents):
         Beta::
 
             @client.event
-            async def on_channel_guest_star_session_end_beta_raw(message: Event[Dict[str, Any]]):
+            async def on_channel_guest_star_session_end_beta(message: Event[Dict[str, Any]]):
                 ...
         """
         condition = {
@@ -5090,7 +5090,7 @@ class UserEvents(_BaseEvents):
         Beta::
 
             @client.event
-            async def on_channel_guest_star_guest_update_beta_raw(message: Event[Dict[str, Any]]):
+            async def on_channel_guest_star_guest_update_beta(message: Event[Dict[str, Any]]):
                 ...
         """
         condition = {
@@ -5155,7 +5155,7 @@ class UserEvents(_BaseEvents):
         Beta::
 
             @client.event
-            async def on_channel_guest_star_settings_update_beta_raw(message: Event[Dict[str, Any]]):
+            async def on_channel_guest_star_settings_update_beta(message: Event[Dict[str, Any]]):
                 ...
         """
         condition = {
@@ -5211,10 +5211,10 @@ class UserEvents(_BaseEvents):
 
         Examples
         --------
-        Beta::
+        Version 1::
 
             @client.event
-            async def on_user_whisper_message_1(message: Event[UserWhisperMessageEvent]):
+            async def on_user_whisper_message_v1(message: Event[UserWhisperMessageEvent]):
                 ...
         """
         condition = {
