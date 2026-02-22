@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Callable, Type, Optional, Dict, Tuple, TYPE_CHECKING
+from typing import Any, Callable, Type, Optional, Dict, Tuple, TYPE_CHECKING, Set
 from ..errors import HTTPException, TokenError, Unauthorized, NotFound
 from ..state import ClientConnectionState, ClientUserConnectionState
 from .errors import ConnectionClosed, ShardError, ShardNotFound
@@ -649,6 +649,9 @@ class ClientUser(BaseClient):
 
     def __init__(self, client_id: str, client_secret: str, **options: Any):
         self.__user: Optional[UserAPI] = None
+        self._event_names: Set[str] = set()
+
+
         self._handlers: Dict[str, Callable[..., None]] = {
             'websocket_ready': self._handle_websocket_ready
         }
@@ -753,7 +756,31 @@ class ClientUser(BaseClient):
         self._closing_task = asyncio.create_task(_close())
         return await self._closing_task
 
-    async def login(self, access_token: str, refresh_token: Optional[str]) -> None:
+    def event(self, coro: Callable[..., Any], /) -> None:
+        name = coro.__name__
+        if name.startswith('on_') and '_v' in name:
+            self._event_names.add(name)
+        super().event(coro)
+
+    async def _register_events_task(self) -> None:
+        for e in self._event_names:
+            try:
+                name, version = e[3:].rsplit('_v', 1)
+                callback = getattr(self.eventsub, name, None)
+                if callback:
+                    await callback(version=version)
+                else:
+                    _logger.warning(f"No handler found for event: {e}")
+            except ValueError:
+                continue
+            except Exception as exc:
+                _logger.exception(f"Error handling event {e}: {exc}")
+
+        self.dispatch('ready')
+        if self._ready is not None:
+            self._ready.set()
+
+    async def login(self, access_token: str, refresh_token: Optional[str], register_events: bool = True) -> None:
         """
         Authenticate a user with access and refresh tokens.
 
@@ -763,6 +790,8 @@ class ClientUser(BaseClient):
             Valid Twitch user access token.
         refresh_token: Optional[str]
             Optional refresh token for automatic token renewal.
+        register_events: bool
+            Use this to automatically register events you added using the `@event` decorator.
 
         Raises
         ------
@@ -771,9 +800,13 @@ class ClientUser(BaseClient):
         """
         self.__user = await self.add_user(access_token, refresh_token)
         self._connection.events = UserEvents(self.__user.id, state=self._connection)
-        self.dispatch('ready')
-        if self._ready is not None:
-            self._ready.set()
+        if register_events and self._event_names:
+            _logger.debug(f"{len(self._event_names)} event(s) detected, starting registration task.")
+            self.loop.create_task(self._register_events_task())
+        else:
+            self.dispatch('ready')
+            if self._ready:
+                self._ready.set()
 
     async def connect(
             self,
@@ -876,6 +909,7 @@ class ClientUser(BaseClient):
             access_token: str,
             refresh_token: Optional[str] = None,
             *,
+            register_events: bool = True,
             reconnect: bool = True,
             mock_url: Optional[str] = None,
     ) -> None:
@@ -888,6 +922,8 @@ class ClientUser(BaseClient):
             Valid Twitch user access token.
         refresh_token: Optional[str]
             Optional refresh token for automatic token renewal.
+        register_events: bool
+            Use this to automatically register events you added using the `@event` decorator.
         reconnect: bool
             Whether to automatically reconnect on connection failures.
         mock_url: Optional[str]
@@ -905,7 +941,7 @@ class ClientUser(BaseClient):
             If there's an HTTP error during startup.
         """
         await self.authorize()
-        await self.login(access_token, refresh_token)
+        await self.login(access_token, refresh_token, register_events)
         await self.connect(reconnect=reconnect, mock_url=mock_url)
 
     def run(
@@ -913,6 +949,7 @@ class ClientUser(BaseClient):
             access_token: str,
             refresh_token: Optional[str] = None,
             *,
+            register_events: bool= True,
             reconnect: bool = True,
             mock_url: Optional[str] = None,
             log_handler: Optional[logging.Handler] = None,
@@ -933,6 +970,8 @@ class ClientUser(BaseClient):
             Valid Twitch user access token.
         refresh_token: Optional[str]
             Optional refresh token for automatic token renewal.
+        register_events: bool
+            Use this to automatically register events you added using the `@event` decorator.
         reconnect: bool
             Whether to automatically reconnect on connection failures.
         mock_url: Optional[str]
@@ -949,7 +988,13 @@ class ClientUser(BaseClient):
 
         async def runner() -> None:
             async with self:
-                await self.start(access_token, refresh_token, reconnect=reconnect, mock_url=mock_url)
+                await self.start(
+                    access_token,
+                    refresh_token,
+                    reconnect=reconnect,
+                    mock_url=mock_url,
+                    register_events=register_events
+                )
 
         try:
             asyncio.run(runner())
