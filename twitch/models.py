@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from .types import helix
 
 __all__ = (
-    'UserIdentity', 'Amount',
+    'UserIdentity', 'Amount', 'UserAuthorization',
 
     # Channel & Stream related
     'ChannelInfo', 'StreamInfo', 'StreamKey', 'ChannelStreamSchedule', 'ScheduleSegment',
@@ -113,6 +113,40 @@ class UserIdentity(NamedTuple):
 
     def __call__(self, *args, **kwargs) -> str:
         return self.id
+
+
+class UserAuthorization(NamedTuple):
+    """
+    Represents a user's authorization scopes granted to the application.
+
+    Attributes
+    ----------
+    identity: UserIdentity
+        The user's identity information.
+    scopes: Tuple[str, ...]
+        A tuple of all the scopes the user has granted to the client ID.
+    raw: MappingProxyType[str, Any]
+        A shallow-frozen dictionary representing the original payload.
+    """
+
+    identity: UserIdentity
+    scopes: Tuple[str, ...]
+    raw: helix.UserAuthorization
+
+    @classmethod
+    def from_data(cls, data: helix.UserAuthorization) -> UserAuthorization:
+        return cls(
+            identity=UserIdentity(
+                id=data['user_id'],
+                login=data['user_login'],
+                name=data['user_name']
+            ),
+            scopes=tuple(data['scopes']),
+            raw=MappingProxyType(data)  # type: ignore
+        )
+
+    def __repr__(self) -> str:
+        return f"UserAuthorization(identity={self.identity!r}, scopes={self.scopes!r})"
 
 
 class StarCommercial(NamedTuple):

@@ -721,3 +721,6 @@ class HypeTrainStatus(TypedDict):
     current: Optional[CurrentHypeTrain]
     all_time_high: Optional[HypeTrainRecord]
     shared_all_time_high: Optional[HypeTrainRecord]
+
+class UserAuthorization(BaseUser):
+    scopes: List[str]

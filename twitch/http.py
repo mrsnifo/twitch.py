@@ -880,6 +880,14 @@ class HTTPClient:
         route = Route('GET', 'users', id=user_ids, login=user_logins)
         return self.request(route=route, user_id=user_id)
 
+    def get_user_authorizations(self,
+                                user_id: str,
+                                /,
+                                user_ids: Set[str]
+                                ) -> Response[DataL[helix.UserAuthorization]]:
+        route = Route('GET', 'authorization/users', user_id=user_ids)
+        return self.request(route=route, user_id=user_id)
+
     def get_top_games(self,
                       user_id: str,
                       /,
