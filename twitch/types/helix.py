@@ -332,6 +332,12 @@ class Clip(TypedDict):
     is_featured: bool
 
 
+class ClipDownload(TypedDict):
+    clip_id: str
+    landscape_download_url: Optional[str]
+    portrait_download_url: Optional[str]
+
+
 # Content Classification Label
 class ContentClassificationLabel(TypedDict):
     id: str

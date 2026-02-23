@@ -33,7 +33,7 @@ from .models import (
     SharedChatSession, SendMessageStatus, UserChatColor, ChatSettings, Chatter, ChatBadgeSet,
     Cheermote, ChannelEmote, GlobalEmote, EmoteSet,
     ChannelInfo, UserInfo, ChannelFollower, FollowedChannel, ChannelEditor, ChannelVIP, ChannelTeam, TeamUsers,
-    Video, Clip, StreamInfo, StreamMarker, ContentClassificationLabel, ChannelStreamSchedule,
+    Video, Clip, ClipDownload, StreamInfo, StreamMarker, ContentClassificationLabel, ChannelStreamSchedule,
     AutoModSettings, BannedUser, UnbanRequest, BlockedTerm, Moderator, ShieldModeStatus, WarnReason, Raid,
     Poll, Prediction, CreatorGoal, HypeTrainEvent, HypeTrainStatus,
     StarCommercial, Subscription, UserSubscription, BitsLeaderboardEntry, CharityCampaign, CharityDonation,
@@ -59,6 +59,7 @@ class BaseAPI:
     def __init__(self, user_id: str, *, state: ConnectionState) -> None:
         self._state: ConnectionState = state
         self.id = user_id
+        
 
     async def get_cheermotes(self, user_id: Optional[str] = None) -> Tuple[Cheermote, ...]:
         """
@@ -978,6 +979,61 @@ class BaseAPI:
         )
         paginated_request._data_transform = lambda data: tuple(Clip.from_data(item) for item in data['data'])
         return paginated_request
+
+    async def get_clips_downloads(
+            self,
+            broadcaster_id: str,
+            clip_ids: Set[str],
+            editor_id: Optional[str] = None
+    ) -> Tuple[ClipDownload, ...]:
+        """
+        Gets URLs to download the video file(s) for the specified clips.
+
+        Token and Authorization Requirements::
+
+        | Token Type  | Required Scopes                             | Authorization Requirements |
+        |-------------|---------------------------------------------|----------------------------|
+        | App Access  | editor:manage:clips or channel:manage:clips | None                       |
+        | User Access | editor:manage:clips or channel:manage:clips | Token holder is editor     |
+
+        Parameters
+        ----------
+        broadcaster_id: str
+            The ID of the broadcaster you want to download clips for.
+        clip_ids: Set[str]
+            IDs that identify the clips to download. Maximum of 10 IDs.
+        editor_id: Optional[str]
+            The User ID of the editor for the channel. If using the broadcaster's auth token,
+            this is the same as broadcaster_id. If None, uses broadcaster_id.
+
+        Returns
+        -------
+        Tuple[ClipDownload, ...]
+            A tuple of ClipDownload objects containing download URLs for each clip.
+
+        Raises
+        ------
+        ValueError
+            If clip_ids contains fewer than 1 or more than 10 items.
+        TokenError
+            If missing a valid app access token or user access token with required scope.
+        BadRequest
+            If any ID in broadcaster_id, editor_id, or clip_id is not valid.
+        Unauthorized
+            If the token is invalid, expired, or missing required scope.
+        Forbidden
+            If the user is not an editor for the specified broadcaster.
+        """
+        if not (1 <= len(clip_ids) <= 10):
+            raise ValueError(f"clip_ids must contain between 1 and 10 items")
+
+        data = await self._state.http.get_clips_downloads(
+            self.id,
+            editor_id=editor_id,
+            broadcaster_id=broadcaster_id,
+            clip_ids=clip_ids
+        )
+        return tuple(ClipDownload.from_data(item) for item in data['data'])
 
     def get_videos_by_id(self, video_ids: Set[str]) -> PaginatedRequest[..., Video]:
         """
@@ -2492,6 +2548,18 @@ class UserAPI(BaseAPI):
     def __init__(self, user_id: str, *, state: ClientUserConnectionState) -> None:
         super().__init__(user_id, state=state)
         self.id: str = user_id
+        
+    async def get_clips_downloads(
+            self,
+            broadcaster_id: str,
+            clip_ids: Set[str],
+            editor_id: Optional[str] = None
+    ) -> Tuple[ClipDownload, ...]:
+        return await super().get_clips_downloads(
+            broadcaster_id=broadcaster_id,
+            clip_ids=clip_ids,
+            editor_id=editor_id or self.id
+        )
 
     async def delete_eventsub_subscription(self, subscription_id: str) -> None:
         await super().delete_eventsub_subscription(subscription_id)
