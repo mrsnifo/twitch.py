@@ -43,7 +43,7 @@ from .models import (
     AnalyticsReport,
     Category, Game, SearchChannel,
     ConduitShard, ConduitShardUpdate, Conduit, StreamKey,
-    DropsEntitlement, DropsEntitlementUpdate, UserIdentity
+    DropsEntitlement, DropsEntitlementUpdate, UserIdentity, UserAuthorization
 )
 
 if TYPE_CHECKING:
@@ -2536,6 +2536,46 @@ class AppAPI(BaseAPI):
             is_broadcast=is_broadcast
         )
         return ExtensionBitsProduct.from_data(data['data'][0])
+
+    async def get_user_authorizations(self, user_ids: Set[str]) -> Tuple[UserAuthorization, ...]:
+        """
+        Gets the authorization scopes that the specified user(s) have granted the application.
+
+        Token and Authorization Requirements::
+
+        | Token Type  | Required Scopes | Authorization Requirements |
+        |-------------|-----------------|----------------------------|
+        | App Access  | None            | None                       |
+
+        Parameters
+        ----------
+        user_ids: Set[str]
+            The ID of the user(s) you want to check authorization for.
+            Maximum of 10 IDs allowed.
+
+        Returns
+        -------
+        Tuple[UserAuthorization, ...]
+            A tuple of UserAuthorization objects containing user information and their authorized scopes.
+
+        Raises
+        ------
+        ValueError
+            If user_ids length exceeds 10.
+        TokenError
+            If missing a valid app access token.
+        BadRequest
+            If invalid parameters or missing parameters.
+        Unauthorized
+            If the access token is not valid, or Authorization header is required and must specify an app access token.
+        Forbidden
+            If the client-id in the header must match the client ID in the access token.
+        """
+        if not (1 <= len(user_ids) <= 10):
+            raise ValueError("user_ids length must be between 1 and 10")
+
+        data = await self._state.http.get_user_authorizations(self.id, user_ids=user_ids)
+        return tuple(UserAuthorization.from_data(item) for item in data['data'] or [])
 
 
 class UserAPI(BaseAPI):
