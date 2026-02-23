@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import NamedTuple, TYPE_CHECKING, Any, Tuple, Optional
 from .utils import from_iso_string
 from types import MappingProxyType
-import datetime
+from datetime import datetime
 
 if TYPE_CHECKING:
     from .types import helix
@@ -78,7 +78,7 @@ __all__ = (
     'UserActiveExtensionUpdate',
 
 
-    'DropsEntitlement', 'DropsEntitlementUpdate'
+    'DropsEntitlement', 'DropsEntitlementUpdate', 'ClipDownload'
 )
 
 
@@ -1827,6 +1827,44 @@ class DropsEntitlementUpdate(NamedTuple):
 
     def __repr__(self) -> str:
         return f"DropsEntitlementUpdate(status={self.status!r}, ids_count={len(self.ids)})"
+
+
+class ClipDownload(NamedTuple):
+    """
+    Represents download URLs for a clip.
+
+    Attributes
+    ----------
+    clip_id: str
+        An ID that uniquely identifies the clip.
+    landscape_download_url: Optional[str]
+        The landscape URL to download the clip. None if the URL is not available.
+    portrait_download_url: Optional[str]
+        The portrait URL to download the clip. None if the URL is not available.
+    raw: MappingProxyType[str, Any]
+        A shallow-frozen dictionary representing the original payload.
+    """
+    clip_id: str
+    landscape_download_url: Optional[str]
+    portrait_download_url: Optional[str]
+    raw: helix.ClipDownload
+
+    @classmethod
+    def from_data(cls, data: helix.ClipDownload) -> ClipDownload:
+        return cls(
+            clip_id=data['clip_id'],
+            landscape_download_url=data.get('landscape_download_url'),
+            portrait_download_url=data.get('portrait_download_url'),
+            raw=MappingProxyType(data)  # type: ignore
+        )
+
+    def __repr__(self) -> str:
+        return f"ClipDownload(clip_id={self.clip_id!r})"
+
+    def __eq__(self, other: ClipDownload) -> bool:
+        if isinstance(other, ClipDownload):
+            return self.clip_id == other.clip_id
+        return False
 
 
 class Subscription(NamedTuple):

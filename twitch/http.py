@@ -944,6 +944,19 @@ class HTTPClient:
             fetch_limit=fetch_limit
         )
 
+    def get_clips_downloads(self,
+                            user_id: str,
+                            /,
+                            editor_id: str,
+                            broadcaster_id: str,
+                            clip_ids: Set[str]
+                            ) -> Response[DataL[helix.ClipDownload]]:
+        route = Route('GET', 'clips/downloads',
+                      editor_id=editor_id,
+                      broadcaster_id=broadcaster_id,
+                      clip_id=clip_ids)
+        return self.request(route, user_id=user_id)
+
     def get_videos(self,
                    user_id: str,
                    /,
@@ -1970,3 +1983,5 @@ class HTTPClient:
     def get_hype_train_status(self, user_id: str, /, broadcaster_id: str) -> Response[DataL[helix.HypeTrainStatus]]:
         route = Route('GET', 'hypetrain/status', broadcaster_id=broadcaster_id)
         return self.request(route, user_id=user_id)
+
+
