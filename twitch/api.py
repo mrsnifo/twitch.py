@@ -35,7 +35,7 @@ from .models import (
     ChannelInfo, UserInfo, ChannelFollower, FollowedChannel, ChannelEditor, ChannelVIP, ChannelTeam, TeamUsers,
     Video, Clip, ClipDownload, CreatedClip, StreamInfo, StreamMarker, ContentClassificationLabel, ChannelStreamSchedule,
     AutoModSettings, BannedUser, UnbanRequest, BlockedTerm, Moderator, ShieldModeStatus, WarnReason, Raid,
-    Poll, Prediction, CreatorGoal, HypeTrainEvent, HypeTrainStatus,
+    Poll, Prediction, CreatorGoal, HypeTrainStatus,
     StarCommercial, Subscription, UserSubscription, BitsLeaderboardEntry, CharityCampaign, CharityDonation,
     AdSchedule, AdSnooze, AutoModStatusMessage,
     UserExtension, ActiveUserExtension, UserActiveExtensionUpdate, ExtensionTransaction, ExtensionBitsProduct,
@@ -3534,52 +3534,6 @@ class UserAPI(BaseAPI):
         """
         data = await self._state.http.get_creator_goals(self.id, broadcaster_id=self.id)
         return tuple(CreatorGoal.from_data(item) for item in data['data'])
-
-    async def get_hype_train_events(
-            self,
-            limit: Optional[int] = 100
-    ) -> PaginatedRequest[..., HypeTrainEvent]:
-        """
-        Gets the Hype Train events for the broadcaster.
-
-        !!! warning
-
-            DEPRECATED Scheduled for removal on December 4, 2025. Use [Get Hype Train Status](../app/classes.md#twitch.api.UserAPI.get_hype_train_status) instead.
-
-        Token and Authorization Requirements::
-
-        | Token Type  | Required Scopes         | Authorization Requirements      |
-        |-------------|-------------------------|---------------------------------|
-        | User Access | channel:read:hype_train | Token holder is the broadcaster |
-
-        Parameters
-        ----------
-        limit: Optional[int]
-            The maximum number of events to return.
-
-        Returns
-        -------
-        PaginatedRequest[..., HypeTrainEvent]
-            A paginated collection of HypeTrainEvent objects.
-
-        Raises
-        ------
-        TokenError
-            If missing user token with scope.
-        BadRequest
-            If broadcaster_id is invalid.
-        Unauthorized
-            If token invalid.
-        Forbidden
-            If the token user is not the broadcaster.
-        """
-        paginated_request = self._state.http.get_hype_train_events(self.id,
-                                                                   broadcaster_id=self.id,
-                                                                   fetch_limit=limit)
-        paginated_request._data_transform = lambda data: tuple(
-            HypeTrainEvent.from_data(item) for item in data['data']
-        )
-        return paginated_request
 
     async def get_hype_train_status(self) -> HypeTrainStatus:
         """

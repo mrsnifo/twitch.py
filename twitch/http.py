@@ -1411,15 +1411,6 @@ class HTTPClient:
         route = Route('GET', 'goals', broadcaster_id=broadcaster_id)
         return self.request(route, user_id=user_id)
 
-    def get_hype_train_events(self,
-                              user_id: str,
-                              /,
-                              broadcaster_id: str,
-                              fetch_limit: Optional[int]
-                              ) ->  PaginatedRequest[PData[helix.HypeTrainEvent], ...]:
-        route = Route('GET', 'hypetrain/events', broadcaster_id=broadcaster_id)
-        return PaginatedRequest(self.request, route=route, user_id=user_id, fetch_limit=fetch_limit, max_first=100)
-
     def check_automod_status(self,
                              user_id: str,
                              /,
