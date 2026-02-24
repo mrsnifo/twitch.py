@@ -143,7 +143,9 @@ class Scopes(str, Enum):
     MODERATOR_MANAGE_SHOUTOUTS: str
         Manage a broadcaster’s shoutouts.
     MODERATOR_READ_SUSPICIOUS_USERS: str
-        View Suspicious User details for a broadcaster’s channel.
+        View Suspicious User details for a broadcaster's channel.
+    MODERATOR_MANAGE_SUSPICIOUS_USERS: str
+        Manage Suspicious User status in a broadcaster's channel.
     MODERATOR_READ_UNBAN_REQUESTS: str
         View a broadcaster’s unban requests.
     MODERATOR_MANAGE_UNBAN_REQUESTS: str
@@ -246,6 +248,7 @@ class Scopes(str, Enum):
     MODERATOR_READ_SHOUTOUTS = 'moderator:read:shoutouts'
     MODERATOR_MANAGE_SHOUTOUTS = 'moderator:manage:shoutouts'
     MODERATOR_READ_SUSPICIOUS_USERS = 'moderator:read:suspicious_users'
+    MODERATOR_MANAGE_SUSPICIOUS_USERS = 'moderator:manage:suspicious_users'
     MODERATOR_READ_UNBAN_REQUESTS = 'moderator:read:unban_requests'
     MODERATOR_MANAGE_UNBAN_REQUESTS = 'moderator:manage:unban_requests'
     MODERATOR_READ_WARNINGS = 'moderator:read:warnings'

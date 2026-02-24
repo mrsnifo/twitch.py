@@ -46,7 +46,7 @@ __all__ = (
     # Chat & Moderation
     'ChatSettings', 'SharedChatParticipant', 'SharedChatSession', 'DropReason',
     'SendMessageStatus', 'UserChatColor', 'ChatBadgeSet', 'BadgeVersion', 'AutoModSettings',
-    'ShieldModeStatus', 'WarnReason', 'AutoModStatusMessage',
+    'ShieldModeStatus', 'WarnReason', 'AutoModStatusMessage', 'SuspiciousUserStatus',
 
     # Emotes & Cheermotes
     'Cheermote', 'CheermoteTier', 'EmoteImages', 'ChannelEmote', 'GlobalEmote', 'EmoteSet',
@@ -2539,6 +2539,53 @@ class ShieldModeStatus(NamedTuple):
 
     def __repr__(self) -> str:
         return f"ShieldModeStatus(is_active={self.is_active})"
+
+
+class SuspiciousUserStatus(NamedTuple):
+    """
+    Represents the suspicious user status.
+
+    Attributes
+    ----------
+    user_id: str
+        The ID of the user being given the suspicious status.
+    broadcaster_id: str
+        The user ID of the broadcaster indicating in which channel the status is being applied.
+    moderator_id: str
+        The user ID of the moderator who applied the last status.
+    updated_at: datetime
+        The timestamp of the last time this user's status was updated.
+    status: str
+        The type of suspicious status. Possible values: ACTIVE_MONITORING, RESTRICTED
+    types: Tuple[str, ...]
+        An array of strings representing the type(s) of suspicious user this is.
+        Possible values: MANUALLY_ADDED, DETECTED_BAN_EVADER, DETECTED_SUS_CHATTER, BANNED_IN_SHARED_CHANNEL
+    raw: MappingProxyType[str, Any]
+        A shallow-frozen dictionary representing the original payload.
+    """
+
+    user_id: str
+    broadcaster_id: str
+    moderator_id: str
+    updated_at: datetime
+    status: str
+    types: Tuple[str, ...]
+    raw: helix.SuspiciousUserStatus
+
+    @classmethod
+    def from_data(cls, data: helix.SuspiciousUserStatus) -> SuspiciousUserStatus:
+        return cls(
+            user_id=data['user_id'],
+            broadcaster_id=data['broadcaster_id'],
+            moderator_id=data['moderator_id'],
+            updated_at=from_iso_string(data['updated_at']),
+            status=data['status'],
+            types=tuple(data['types']),
+            raw=MappingProxyType(data)  # type: ignore
+        )
+
+    def __repr__(self) -> str:
+        return f"SuspiciousUserStatus(user_id={self.user_id!r}, status={self.status!r})"
 
 
 class WarnReason(NamedTuple):

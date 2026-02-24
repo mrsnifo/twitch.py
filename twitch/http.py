@@ -1647,6 +1647,23 @@ class HTTPClient:
         )
         return self.request(route, user_id=user_id)
 
+    def add_suspicious_user_status(self,
+                                   user_id: str,
+                                   /,
+                                   broadcaster_id: str,
+                                   moderator_id: str,
+                                   target_user_id: str,
+                                   status: str
+                                   ) -> Response[DataL[helix.SuspiciousUserStatus]]:
+        route = Route(
+            'POST',
+            'moderation/suspicious_users',
+            broadcaster_id=broadcaster_id,
+            moderator_id=moderator_id
+        )
+        body = {'user_id': target_user_id, 'status': status}
+        return self.request(route, user_id=user_id, json=body)
+
     def get_polls(self,
                   user_id: str,
                   /,
