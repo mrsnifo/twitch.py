@@ -68,7 +68,7 @@ __all__ = (
 
     # Monetization
     'StarCommercial', 'BitsLeaderboardEntry', 'Charity', 'CharityCampaign',
-    'CharityDonation', 'CreatorGoal', 'Contribution', 'HypeTrainEvent',
+    'CharityDonation', 'CreatorGoal', 'Contribution',
     'HypeTrainRecord', 'CurrentHypeTrain', 'HypeTrainStatus',
 
     # Polls & Predictions
@@ -250,7 +250,7 @@ class Cheermote(NamedTuple):
     order: int
         The display order in the Bits card. Numbers may not be consecutive
         and are unique within each Cheermote type.
-    last_updated: datetime.datetime
+    last_updated: datetime
         The date and time in RFC3339 format when this Cheermote was last updated.
     is_charitable: bool
         Whether this Cheermote provides a charitable contribution match during campaigns.
@@ -262,7 +262,7 @@ class Cheermote(NamedTuple):
     tiers: Tuple[CheermoteTier, ...]
     type: str
     order: int
-    last_updated: datetime.datetime
+    last_updated: datetime
     is_charitable: bool
     raw: helix.Cheermote
 
@@ -784,9 +784,9 @@ class SharedChatSession(NamedTuple):
         The User ID of the host channel.
     participants: Tuple[SharedChatParticipant, ...]
         The list of participants in the session.
-    created_at: datetime.datetime
+    created_at: datetime
         The UTC datetime for when the session was created.
-    updated_at: datetime.datetime
+    updated_at: datetime
         The UTC datetime for when the session was last updated.
     raw: MappingProxyType[str, Any]
         A shallow-frozen dictionary representing the original payload.
@@ -795,8 +795,8 @@ class SharedChatSession(NamedTuple):
     session_id: str
     host_broadcaster_id: str
     participants: Tuple[SharedChatParticipant, ...]
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+    created_at: datetime
+    updated_at: datetime
     raw: helix.SharedChatSession
 
     @classmethod
@@ -1007,9 +1007,9 @@ class TeamInfo(NamedTuple):
         A URL to the team's banner image. None if no banner is set.
     background_image_url: Optional[str]
         A URL to the team's background image. None if no background image is set.
-    created_at: datetime.datetime
+    created_at: datetime
         The UTC date and time of when the team was created.
-    updated_at: datetime.datetime
+    updated_at: datetime
         The UTC date and time of when the team was last updated.
     """
 
@@ -1020,8 +1020,8 @@ class TeamInfo(NamedTuple):
     thumbnail_url: str
     banner: Optional[str]
     background_image_url: Optional[str]
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
+    created_at: datetime
+    updated_at: datetime
 
     def __repr__(self) -> str:
         return f"TeamInfo(id={self.id!r}, team_name={self.team_name!r})"
@@ -1156,7 +1156,7 @@ class UserInfo(NamedTuple):
     profile_image_url: str
     offline_image_url: str
     email: Optional[str]
-    created_at: datetime.datetime
+    created_at: datetime
     raw: helix.UserInfo
 
     @classmethod
@@ -1379,7 +1379,7 @@ class Clip(NamedTuple):
     language: str
     title: str
     view_count: int
-    created_at: datetime.datetime
+    created_at: datetime
     thumbnail_url: str
     duration: float
     vod_offset: Optional[int]
@@ -1458,9 +1458,9 @@ class Video(NamedTuple):
         The video's title.
     description: str
         The video's description.
-    created_at: datetime.datetime
+    created_at: datetime
         The datetime when the video was created.
-    published_at: datetime.datetime
+    published_at: datetime
         The datetime when the video was published.
     url: str
         The video's URL.
@@ -1488,8 +1488,8 @@ class Video(NamedTuple):
     user: UserIdentity
     title: str
     description: str
-    created_at: datetime.datetime
-    published_at: datetime.datetime
+    created_at: datetime
+    published_at: datetime
     url: str
     thumbnail_url: str
     viewable: str
@@ -1665,13 +1665,13 @@ class ScheduleSegment(NamedTuple):
     ----------
     id: str
         An ID that identifies this broadcast segment.
-    start_time: datetime.datetime
+    start_time: datetime
         The UTC date and time of when the broadcast starts.
-    end_time: datetime.datetime
+    end_time: datetime
         The UTC date and time of when the broadcast ends.
     title: str
         The broadcast segment's title.
-    canceled_until: Optional[datetime.datetime]
+    canceled_until: Optional[datetime]
         Indicates whether the broadcaster canceled this segment. Set to end_time if canceled, null otherwise.
     category: Optional[ScheduleCategory]
         The type of content that the broadcaster plans to stream.
@@ -1681,10 +1681,10 @@ class ScheduleSegment(NamedTuple):
         A shallow-frozen dictionary representing the original payload.
     """
     id: str
-    start_time: datetime.datetime
-    end_time: datetime.datetime
+    start_time: datetime
+    end_time: datetime
     title: str
-    canceled_until: Optional[datetime.datetime]
+    canceled_until: Optional[datetime]
     category: Optional[Category]
     is_recurring: bool
     raw: helix.ScheduleSegment
@@ -1721,13 +1721,13 @@ class ScheduleVacation(NamedTuple):
 
     Attributes
     ----------
-    start_time: datetime.datetime
+    start_time: datetime
         The UTC date and time of when the vacation starts.
-    end_time: datetime.datetime
+    end_time: datetime
         The UTC date and time of when the vacation ends.
     """
-    start_time: datetime.datetime
-    end_time: datetime.datetime
+    start_time: datetime
+    end_time: datetime
 
     def __repr__(self) -> str:
         return f"ScheduleVacation(start_time={self.start_time!r}, end_time={self.end_time!r})"
@@ -1956,7 +1956,7 @@ class Subscription(NamedTuple):
         Subscription condition parameters
     transport: MappingProxyType[str, str]
         Transport information for the subscription
-    created_at: datetime.datetime
+    created_at: datetime
         Subscription creation timestamp
     cost: int
         Cost points for this subscription
@@ -1969,7 +1969,7 @@ class Subscription(NamedTuple):
     version: str
     condition: MappingProxyType[str, str]
     transport: helix.Transport
-    created_at: datetime.datetime
+    created_at: datetime
     cost: int
     raw: helix.Subscription
 
@@ -3135,100 +3135,6 @@ class Contribution(NamedTuple):
     user: UserIdentity
     type: str
     total: int
-
-
-class HypeTrainEvent(NamedTuple):
-    """
-    Represents a Hype Train event.
-
-    Attributes
-    ----------
-    id: str
-        The Hype Train ID.
-    broadcaster_id: str
-        Broadcaster user ID Hype Train takes place in.
-    cooldown_end_time: datetime
-        The time when the Hype Train cooldown ends so that the next Hype Train can start.
-    expires_at: datetime
-        The time when the Hype Train expires. The expiration is extended when the Hype Train level increases. If the Hype Train level doesn't increase before this time, the Hype Train ends.
-    goal: int
-        The requested goal value required to reach the next level.
-    last_contribution: Contribution
-        The most recent contribution towards the Hype Train's goal.
-    level: int
-        The current level of Hype Train event. Values are between 1 (minimum) and 5 (maximum).
-    started_at: datetime
-        The time when the Hype Train started.
-    top_contributions: Tuple[Contribution, ...]
-        The contributors with the most points contributed.
-    contributions: Tuple[Contribution, ...]
-        All contributions from this Hype Train.
-    raw: MappingProxyType[str, Any]
-        A shallow-frozen dictionary representing the original payload.
-    """
-
-    id: str
-    broadcaster_id: str
-    cooldown_end_time: datetime
-    expires_at: datetime
-    goal: int
-    last_contribution: Contribution
-    level: int
-    started_at: datetime
-    top_contributions: Tuple[Contribution, ...]
-    contributions: Tuple[Contribution, ...]
-    raw: helix.HypeTrainEvent
-
-    @classmethod
-    def from_data(cls, data: helix.HypeTrainEvent) -> HypeTrainEvent:
-        event_data = data['event_data']
-        last_contribution = Contribution(
-            user=UserIdentity(
-                id=event_data['last_contribution']['user_id'],
-                login=event_data['last_contribution']['user_login'],
-                name=event_data['last_contribution']['user_name']
-            ),
-            type=event_data['last_contribution']['type'],
-            total=event_data['last_contribution']['total']
-        )
-        top_contributions = tuple(
-            Contribution(
-                user=UserIdentity(
-                    id=contrib['user_id'],
-                    login=contrib['user_login'],
-                    name=contrib['user_name']
-                ),
-                type=contrib['type'],
-                total=contrib['total']
-            ) for contrib in event_data['top_contributions']
-        )
-        contributions = tuple(
-            Contribution(
-                user=UserIdentity(
-                    id=contrib['user_id'],
-                    login=contrib['user_login'],
-                    name=contrib['user_name']
-                ),
-                type=contrib['type'],
-                total=contrib['total']
-            ) for contrib in event_data['contributions']
-        )
-        return cls(
-            id=data['id'],
-            broadcaster_id=event_data['broadcaster_id'],
-            cooldown_end_time=from_iso_string(event_data['cooldown_end_time']),
-            expires_at=from_iso_string(event_data['expires_at']),
-            goal=event_data['goal'],
-            last_contribution=last_contribution,
-            level=event_data['level'],
-            started_at=from_iso_string(event_data['started_at']),
-            top_contributions=top_contributions,
-            contributions=contributions,
-            raw=MappingProxyType(data)  # type: ignore
-        )
-
-    def __repr__(self) -> str:
-        return f"HypeTrainEvent(id={self.id!r}, level={self.level})"
 
 
 class HypeTrainRecord(NamedTuple):

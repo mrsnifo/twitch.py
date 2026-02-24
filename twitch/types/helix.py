@@ -472,10 +472,6 @@ class Contribution(BaseUser):
     type: str
     total: int
 
-class HypeTrainEvent(TypedDict):
-    id: str
-    event_data: Dict[str, Any]
-
 class AutoModStatusMessage(TypedDict):
     msg_id: str
     msg_text: str
