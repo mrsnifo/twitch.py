@@ -3470,7 +3470,7 @@ class UserAPI(BaseAPI):
             reason=reason)
         return WarnReason.from_data(data['data'][0])
 
-    async def create_clip(self, broadcaster_id: str, has_delay: bool = False) -> Clip:
+    async def create_clip(self, broadcaster_id: str, has_delay: bool = False) -> CreatedClip:
         """
         Creates a clip from the broadcaster's stream.
 
@@ -3504,7 +3504,7 @@ class UserAPI(BaseAPI):
             If the token user is not the broadcaster or editor.
         """
         data = await self._state.http.create_clip(self.id, broadcaster_id=broadcaster_id, has_delay=has_delay)
-        return Clip.from_data(data['data'][0])
+        return CreatedClip.from_data(data['data'][0])
 
     async def get_creator_goals(self) -> Tuple[CreatorGoal, ...]:
         """

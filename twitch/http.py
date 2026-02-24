@@ -1380,7 +1380,7 @@ class HTTPClient:
         body = {'user_id': user_id_warn, 'reason': reason}
         return self.request(route, user_id=user_id, json=body)
 
-    def create_clip(self, user_id: str, /, broadcaster_id: str, has_delay: bool) -> Response[DataL[helix.Clip]]:
+    def create_clip(self, user_id: str, /, broadcaster_id: str, has_delay: bool) -> Response[DataL[helix.CreatedClip]]:
         route = Route('POST', 'clips', broadcaster_id=broadcaster_id, has_delay=has_delay)
         return self.request(route, user_id=user_id)
 
