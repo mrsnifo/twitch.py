@@ -1380,8 +1380,31 @@ class HTTPClient:
         body = {'user_id': user_id_warn, 'reason': reason}
         return self.request(route, user_id=user_id, json=body)
 
-    def create_clip(self, user_id: str, /, broadcaster_id: str, has_delay: bool) -> Response[DataL[helix.Clip]]:
+    def create_clip(self, user_id: str, /, broadcaster_id: str, has_delay: bool) -> Response[DataL[helix.CreatedClip]]:
         route = Route('POST', 'clips', broadcaster_id=broadcaster_id, has_delay=has_delay)
+        return self.request(route, user_id=user_id)
+
+    def create_clip_from_vod(
+            self,
+            user_id: str,
+            /,
+            editor_id: str,
+            broadcaster_id: str,
+            vod_id: str,
+            vod_offset: int,
+            title: str,
+            duration: Optional[float]
+    ) -> Response[DataL[helix.CreatedClip]]:
+        route = Route(
+            'POST',
+            'videos/clips',
+            editor_id=editor_id,
+            broadcaster_id=broadcaster_id,
+            vod_id=vod_id,
+            vod_offset=vod_offset,
+            duration=duration,
+            title=title
+        )
         return self.request(route, user_id=user_id)
 
     def get_creator_goals(self, user_id: str, /, broadcaster_id: str) -> Response[DataL[helix.CreatorGoal]]:

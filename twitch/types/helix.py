@@ -332,6 +332,11 @@ class Clip(TypedDict):
     is_featured: bool
 
 
+class CreatedClip(TypedDict):
+    id: str
+    edit_url: str
+
+
 class ClipDownload(TypedDict):
     clip_id: str
     landscape_download_url: Optional[str]

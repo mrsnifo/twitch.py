@@ -78,7 +78,7 @@ __all__ = (
     'UserActiveExtensionUpdate',
 
 
-    'DropsEntitlement', 'DropsEntitlementUpdate', 'ClipDownload'
+    'DropsEntitlement', 'DropsEntitlementUpdate', 'ClipDownload', 'CreatedClip'
 )
 
 
@@ -1898,6 +1898,43 @@ class ClipDownload(NamedTuple):
     def __eq__(self, other: ClipDownload) -> bool:
         if isinstance(other, ClipDownload):
             return self.clip_id == other.clip_id
+        return False
+
+
+class CreatedClip(NamedTuple):
+    """
+    Represents a clip created from a VOD.
+
+    Attributes
+    ----------
+    id: str
+        An ID that uniquely identifies the clip.
+    edit_url: str
+        A URL you can use to edit the clip's title, feature the clip,
+        create a portrait version of the clip, download the clip media,
+        and share the clip directly to third-party platforms.
+    raw: MappingProxyType[str, Any]
+        A shallow-frozen dictionary representing the original payload.
+    """
+
+    id: str
+    edit_url: str
+    raw: helix.CreatedClip
+
+    @classmethod
+    def from_data(cls, data: helix.CreatedClip) -> CreatedClip:
+        return cls(
+            id=data['id'],
+            edit_url=data['edit_url'],
+            raw=MappingProxyType(data)  # type: ignore
+        )
+
+    def __repr__(self) -> str:
+        return f"CreatedClip(id={self.id!r})"
+
+    def __eq__(self, other: CreatedClip) -> bool:
+        if isinstance(other, CreatedClip):
+            return self.id == other.id
         return False
 
 
