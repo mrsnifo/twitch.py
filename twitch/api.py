@@ -37,7 +37,7 @@ from .models import (
     AutoModSettings, BannedUser, UnbanRequest, BlockedTerm, Moderator, ShieldModeStatus, WarnReason, Raid,
     Poll, Prediction, CreatorGoal, HypeTrainStatus,
     StarCommercial, Subscription, UserSubscription, BitsLeaderboardEntry, CharityCampaign, CharityDonation,
-    AdSchedule, AdSnooze, AutoModStatusMessage,
+    AdSchedule, AdSnooze, AutoModStatusMessage, SuspiciousUserStatus,
     UserExtension, ActiveUserExtension, UserActiveExtensionUpdate, ExtensionTransaction, ExtensionBitsProduct,
     ExtensionLiveChannel, ExtensionConfiguration,
     AnalyticsReport,
@@ -62,6 +62,58 @@ class BaseAPI:
 
     def __repr__(self):
         return f"{self.__class__.__name__}(id={self.id})"
+
+    async def add_suspicious_user_status(
+            self,
+            target_user_id: str,
+            broadcaster_id: str,
+            status: Literal['ACTIVE_MONITORING', 'RESTRICTED']
+    ) -> SuspiciousUserStatus:
+        """
+        Adds a suspicious user status to a chatter on the broadcaster's channel.
+
+        Token and Authorization Requirements::
+
+        | Token Type  | Required Scopes                       | Authorization Requirements |
+        |-------------|---------------------------------------|----------------------------|
+        | App Access  | moderator:manage:suspicious_users     | None                       |
+        | User Access | moderator:manage:suspicious_users     | Token holder is moderator  |
+
+        Parameters
+        ----------
+        target_user_id: str
+            The ID of the user being given the suspicious status.
+        status: Literal['ACTIVE_MONITORING', 'RESTRICTED']
+            The type of suspicious status. Possible values are: ACTIVE_MONITORING, RESTRICTED
+        broadcaster_id: str
+            The ID of the broadcaster. Defaults to the current user.
+
+        Returns
+        -------
+        SuspiciousUserStatus
+            The suspicious user status that was applied.
+
+        Raises
+        ------
+        TokenError
+            If missing user token with scope.
+        BadRequest
+            If broadcaster_id is invalid.
+            If the status specified was invalid.
+            If the status update is not allowed for this user.
+        Unauthorized
+            If token invalid.
+        Forbidden
+            If the token user is not a moderator for the broadcaster.
+        """
+        data = await self._state.http.add_suspicious_user_status(
+            self.id,
+            broadcaster_id=broadcaster_id or self.id,
+            moderator_id=self.id,
+            target_user_id=target_user_id,
+            status=status
+        )
+        return SuspiciousUserStatus.from_data(data['data'][0])
 
     async def get_cheermotes(self, user_id: Optional[str] = None) -> Tuple[Cheermote, ...]:
         """
@@ -2674,6 +2726,19 @@ class UserAPI(BaseAPI):
     def __init__(self, user_id: str, *, state: ClientUserConnectionState) -> None:
         super().__init__(user_id, state=state)
         self.id: str = user_id
+
+    async def add_suspicious_user_status(
+            self,
+            target_user_id: str,
+
+            status: Literal['ACTIVE_MONITORING', 'RESTRICTED'],
+            broadcaster_id: Optional[str] = None,
+    ) -> SuspiciousUserStatus:
+        return await super().add_suspicious_user_status(
+            target_user_id=target_user_id,
+            status=status,
+            broadcaster_id=broadcaster_id or self.id
+        )
 
     async def create_clip_from_vod(
             self,

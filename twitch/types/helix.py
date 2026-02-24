@@ -731,3 +731,12 @@ class HypeTrainStatus(TypedDict):
 
 class UserAuthorization(BaseUser):
     scopes: List[str]
+
+
+class SuspiciousUserStatus(TypedDict):
+    user_id: str
+    broadcaster_id: str
+    moderator_id: str
+    updated_at: str
+    status: Literal['ACTIVE_MONITORING', 'RESTRICTED']
+    types: List[Literal['MANUALLY_ADDED', 'DETECTED_BAN_EVADER', 'DETECTED_SUS_CHATTER', 'BANNED_IN_SHARED_CHANNEL']]
