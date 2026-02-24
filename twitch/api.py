@@ -66,6 +66,7 @@ class BaseAPI:
     async def add_suspicious_user_status(
             self,
             target_user_id: str,
+            moderator_id: str,
             broadcaster_id: str,
             status: Literal['ACTIVE_MONITORING', 'RESTRICTED']
     ) -> SuspiciousUserStatus:
@@ -83,6 +84,8 @@ class BaseAPI:
         ----------
         target_user_id: str
             The ID of the user being given the suspicious status.
+        moderator_id:
+            The user ID of the moderator who is applying the status.
         status: Literal['ACTIVE_MONITORING', 'RESTRICTED']
             The type of suspicious status. Possible values are: ACTIVE_MONITORING, RESTRICTED
         broadcaster_id: str
@@ -108,10 +111,60 @@ class BaseAPI:
         """
         data = await self._state.http.add_suspicious_user_status(
             self.id,
-            broadcaster_id=broadcaster_id or self.id,
-            moderator_id=self.id,
+            broadcaster_id=broadcaster_id,
+            moderator_id=moderator_id,
             target_user_id=target_user_id,
             status=status
+        )
+        return SuspiciousUserStatus.from_data(data['data'][0])
+
+    async def remove_suspicious_user_status(
+            self,
+            target_user_id: str,
+            moderator_id: str,
+            broadcaster_id: str
+    ) -> SuspiciousUserStatus:
+        """
+        Removes a suspicious user status from a chatter on the broadcaster's channel.
+
+        Token and Authorization Requirements::
+
+        | Token Type  | Required Scopes                       | Authorization Requirements |
+        |-------------|---------------------------------------|----------------------------|
+        | App Access  | moderator:manage:suspicious_users     | None                       |
+        | User Access | moderator:manage:suspicious_users     | Token holder is moderator  |
+
+        Parameters
+        ----------
+        target_user_id: str
+            The ID of the user having the suspicious status removed.
+        moderator_id:
+            The user ID of the moderator who is removing the status.
+        broadcaster_id: str
+            The ID of the broadcaster. Defaults to the current user.
+
+        Returns
+        -------
+        SuspiciousUserStatus
+            The suspicious user status that was removed.
+
+        Raises
+        ------
+        TokenError
+            If missing user token with scope.
+        BadRequest
+            If broadcaster_id is invalid.
+            If the status update is not allowed for this user.
+        Unauthorized
+            If token invalid.
+        Forbidden
+            If the token user is not a moderator for the broadcaster.
+        """
+        data = await self._state.http.remove_suspicious_user_status(
+            self.id,
+            broadcaster_id=broadcaster_id,
+            moderator_id=self.id,
+            target_user_id=target_user_id
         )
         return SuspiciousUserStatus.from_data(data['data'][0])
 
@@ -2730,13 +2783,26 @@ class UserAPI(BaseAPI):
     async def add_suspicious_user_status(
             self,
             target_user_id: str,
-
             status: Literal['ACTIVE_MONITORING', 'RESTRICTED'],
-            broadcaster_id: Optional[str] = None,
+            moderator_id: Optional[str] = None,
+            broadcaster_id: Optional[str] = None
     ) -> SuspiciousUserStatus:
         return await super().add_suspicious_user_status(
             target_user_id=target_user_id,
             status=status,
+            moderator_id=moderator_id or self.id,
+            broadcaster_id=broadcaster_id or self.id
+        )
+
+    async def remove_suspicious_user_status(
+            self,
+            target_user_id: str,
+            moderator_id: Optional[str] = None,
+            broadcaster_id: Optional[str] = None
+    ) -> SuspiciousUserStatus:
+        return await super().remove_suspicious_user_status(
+            target_user_id=target_user_id,
+            moderator_id=moderator_id or self.id,
             broadcaster_id=broadcaster_id or self.id
         )
 
