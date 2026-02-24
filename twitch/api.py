@@ -33,7 +33,7 @@ from .models import (
     SharedChatSession, SendMessageStatus, UserChatColor, ChatSettings, Chatter, ChatBadgeSet,
     Cheermote, ChannelEmote, GlobalEmote, EmoteSet,
     ChannelInfo, UserInfo, ChannelFollower, FollowedChannel, ChannelEditor, ChannelVIP, ChannelTeam, TeamUsers,
-    Video, Clip, ClipDownload, StreamInfo, StreamMarker, ContentClassificationLabel, ChannelStreamSchedule,
+    Video, Clip, ClipDownload, CreatedClip, StreamInfo, StreamMarker, ContentClassificationLabel, ChannelStreamSchedule,
     AutoModSettings, BannedUser, UnbanRequest, BlockedTerm, Moderator, ShieldModeStatus, WarnReason, Raid,
     Poll, Prediction, CreatorGoal, HypeTrainEvent, HypeTrainStatus,
     StarCommercial, Subscription, UserSubscription, BitsLeaderboardEntry, CharityCampaign, CharityDonation,
@@ -59,7 +59,9 @@ class BaseAPI:
     def __init__(self, user_id: str, *, state: ConnectionState) -> None:
         self._state: ConnectionState = state
         self.id = user_id
-        
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(id={self.id})"
 
     async def get_cheermotes(self, user_id: Optional[str] = None) -> Tuple[Cheermote, ...]:
         """
@@ -95,8 +97,92 @@ class BaseAPI:
         data = await self._state.http.get_cheermotes(self.id, broadcaster_id=user_id)
         return tuple(Cheermote.from_data(cheermote) for cheermote in data['data'])
 
-    def __repr__(self):
-        return f"{self.__class__.__name__}(id={self.id})"
+    async def create_clip_from_vod(
+            self,
+            broadcaster_id: str,
+            vod_id: str,
+            vod_offset: int,
+            title: str,
+            editor_id: Optional[str] = None,
+            duration: Optional[float] = None
+    ) -> CreatedClip:
+        """
+        Creates a clip from a broadcaster's VOD on behalf of the broadcaster or an editor of the channel.
+        Since a live stream is actively creating a VOD, this endpoint can also be used to create a clip
+        from earlier in the current stream.
+
+        The duration of a clip can be from 5 seconds to 60 seconds in length, with a default of 30 seconds
+        if not specified.
+
+        vod_offset indicates where the clip will end. In other words, the clip will start at (vod_offset - duration)
+        and end at vod_offset. This means that the value of vod_offset must be greater than or equal to the value
+        of duration.
+
+        Token and Authorization Requirements::
+
+        | Token Type  | Required Scopes                             | Authorization Requirements            |
+        |-------------|---------------------------------------------|---------------------------------------|
+        | App Access  | editor:manage:clips or channel:manage:clips | None                                  |
+        | User Access | editor:manage:clips or channel:manage:clips | Token holder is editor or broadcaster |
+
+        Parameters
+        ----------
+        broadcaster_id: str
+            The user ID for the channel you want to create a clip for.
+        vod_id: str
+            ID of the VOD the user wants to clip.
+        vod_offset: int
+            Offset in the VOD to create the clip. See notes above.
+        title: str
+            The title of the clip.
+        editor_id: Optional[str]
+            The user ID of the editor for the channel you want to create a clip for.
+            If using the broadcaster's auth token, this is the same as broadcaster_id.
+            This must match the user_id in the user access token. If None, uses broadcaster_id.
+        duration: Optional[float]
+            The length of the clip, in seconds. Precision is 0.1. Defaults to 30.
+            Min: 5 seconds, Max: 60 seconds.
+
+        Returns
+        -------
+        CreatedClip
+            The created clip with edit URL.
+
+        Raises
+        ------
+        TokenError
+            If missing a valid app access token or user access token with required scope.
+        BadRequest
+            If invalid source type, missing required fields, broadcaster_id is required but not provided,
+            broadcaster not found, category is not clippable, title did not pass AutoMod checks,
+            or broadcaster is banned.
+        Unauthorized
+            If the Authorization header is required and must specify user access token,
+            the user access token must include the editor:manage:clips or channel:manage:clips scope,
+            the OAuth token is not valid, or the ID in the Client-Id header must match the Client ID
+            in the OAuth token.
+        Forbidden
+            If the broadcaster has restricted the ability to capture clips to followers and/or subscribers only,
+            the specified broadcaster has not enabled clips on their channel,
+            the user defined by the editor_id is not authorized to create Clips,
+            or the user is banned or timed out from the broadcaster's channel.
+        NotFound
+            If the broadcaster in the broadcaster_id query parameter must be broadcasting live,
+            the VOD is not found, or the broadcaster_id or the editor_id does not exist.
+        """
+        if editor_id is None:
+            editor_id = broadcaster_id
+
+        data = await self._state.http.create_clip_from_vod(
+            self.id,
+            editor_id=editor_id,
+            broadcaster_id=broadcaster_id,
+            vod_id=vod_id,
+            vod_offset=vod_offset,
+            title=title,
+            duration=duration
+        )
+        return CreatedClip.from_data(data['data'][0])
 
     async def get_channel_emotes(self, user_id: str) -> Tuple[ChannelEmote, ...]:
         """
@@ -2588,6 +2674,24 @@ class UserAPI(BaseAPI):
     def __init__(self, user_id: str, *, state: ClientUserConnectionState) -> None:
         super().__init__(user_id, state=state)
         self.id: str = user_id
+
+    async def create_clip_from_vod(
+            self,
+            vod_id: str,
+            vod_offset: int,
+            title: str,
+            broadcaster_id: Optional[str] = None,
+            editor_id: Optional[str] = None,
+            duration: Optional[float] = None
+    ) -> CreatedClip:
+        return await super().create_clip_from_vod(
+            broadcaster_id=broadcaster_id or self.id,
+            vod_id=vod_id,
+            vod_offset=vod_offset,
+            title=title,
+            editor_id=editor_id,
+            duration=duration
+        )
         
     async def get_clips_downloads(
             self,
