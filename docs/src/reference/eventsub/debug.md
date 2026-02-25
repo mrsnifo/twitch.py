@@ -1,5 +1,5 @@
 ---
-icon: fontawesome/solid/bug
+icon: lucide/bug
 hide:
   - toc
 ---

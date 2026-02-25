@@ -1,6 +1,6 @@
 ---
 description: "Get started with twitch.py. Learn how to install the library, set up your Twitch app, and choose the right approach for your bot with code examples for App, ClientUser, and ClientApp."
-icon: material/clock-start
+icon: lucide/zap
 hide:
   - toc
 search:
@@ -9,49 +9,67 @@ search:
 
 # Quickstart
 
-## Setup
+## Prerequisites
 
-### Create Twitch Application
+- Python 3.9 or higher
+- A Twitch account
 
-Before using the library, you need to create a Twitch application:
+## Step 1: Create a Twitch Application
 
-1. Visit the [Twitch Developer Console](https://dev.twitch.tv/console)
-2. Click **"Register Your Application"**
-3. Fill in the application details:
-   - **Name**: Your bot or application name
-   - **OAuth Redirect URLs**: Leave empty (not needed for these examples)
-   - **Category**: Select the most appropriate category
-4. Click **"Create"** to register your application
-5. Copy your **Client ID** and **Client Secret** for use in your code
+1. Go to the [Twitch Developer Console](https://dev.twitch.tv/console)
+2. Click **Register Your Application**
+3. Fill in a name and category, leave OAuth Redirect URLs empty for now
+4. Click **Create** and copy your **Client ID** and **Client Secret**
 
-## Installing
-To install the library, you can just run the following command:
+!!! warning "Keep your Client Secret safe"
+    Never commit your Client Secret to git or share it publicly.
+
+## Step 2: Install the Library
+
 ```bash
-# Linux/macOS
-python3 -m pip install -U twitch.py
-# Windows
-py -3 -m pip install -U twitch.py
+pip install twitch.py
 ```
 
-For the development version:
-```bash
-git clone https://github.com/mrsnifo/twitch.py
-cd twitch.py
-python3 -m pip install -U .
+## Step 3: Getting a User Access Token
+
+For `ClientUser` and `ClientApp`, you'll need a user access token.
+
+```python
+from twitch.oauth import DeviceCodeFlow, Scopes
+import asyncio
+
+async def main():
+    async with DeviceCodeFlow('CLIENT_ID', 'CLIENT_SECRET') as flow:
+        device_code = await flow.request_device_code({
+            Scopes.USER_READ_CHAT,
+            Scopes.USER_WRITE_CHAT,
+            Scopes.MODERATOR_READ_FOLLOWERS
+        })
+
+        print(f"Go to: {device_code.verification_uri}")
+        print(f"Enter code: {device_code.user_code}")
+
+        token = await flow.wait_for_device_token(device_code.device_code)
+        print(f"Access Token: {token.access_token}")
+        print(f"Refresh Token: {token.refresh_token}")
+
+asyncio.run(main())
 ```
 
-## Choose Your Approach
+Save the tokens, because you'll need them to run your bot.
+
+## Step 4: Choose Your Approach
 
 === "App"
 
-    Quick data fetching
+    Use this if you just need to fetch data from Twitch without real-time events.
 
     ```python
     from twitch import App
     import asyncio
 
     async def main():
-        async with App('CLIENT_ID', 'CLIENT_SECRET') as app:
+        async with App('YOUR_CLIENT_ID', 'YOUR_CLIENT_SECRET') as app:
             results = await app.application.search_channels('gaming')
             print(f"Found {len(results)} channels")
 
@@ -60,42 +78,43 @@ python3 -m pip install -U .
 
 === "ClientUser"
 
-    Simple personal bot
+    Use this for a bot that works only with your own Twitch account.
 
     ```python
     from twitch.eventsub import ClientUser, Event, ChannelChatMessageEvent
+    import logging
 
-    client = ClientUser('CLIENT_ID', 'CLIENT_SECRET')
+    client = ClientUser('YOUR_CLIENT_ID', 'YOUR_CLIENT_SECRET')
 
     @client.event
     async def on_chat_message_v1(message: Event[ChannelChatMessageEvent]):
-        if '!hello' in message.event.message.text:
-            await client.user.send_chat_message(f"Hi {message.event.chatter.name}!")
+        username = message.event.chatter.name
+        msg = message.event.message.text.lower()
 
-    @client.event
-    async def on_ready():
-        await client.eventsub.channel_chat_message()
+        if msg == '!hello':
+            await client.user.send_chat_message(f"Hello @{username}!")
 
-    client.run('ACCESS_TOKEN')
+    client.run('YOUR_ACCESS_TOKEN', log_level=logging.INFO)
     ```
 
 === "ClientApp"
 
-    Bot for multiple streamers
+    Use this for a bot that works across multiple streamers or channels.
 
     ```python
     from twitch.eventsub import ClientApp, Event, StreamOnlineEvent
+    import logging
 
-    client = ClientApp('CLIENT_ID', 'CLIENT_SECRET')
+    client = ClientApp('YOUR_CLIENT_ID', 'YOUR_CLIENT_SECRET')
 
     @client.event
     async def on_stream_online_v1(message: Event[StreamOnlineEvent]):
-        print(f"{message.event.broadcaster.name} went live!")
+        print(f"{message.event.broadcaster.name} is now live!")
 
     @client.event
     async def on_ready():
-        user = await client.add_user('STREAMER_TOKEN')
+        user = await client.add_user('USER_ACCESS_TOKEN', 'USER_REFRESH_TOKEN')
         await client.eventsub.stream_online(user.id)
 
-    client.run('CONDUIT_ID', shard_ids=(0,))
+    client.run('YOUR_CONDUIT_ID', shard_ids=(0,), log_level=logging.INFO)
     ```

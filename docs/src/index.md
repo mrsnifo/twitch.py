@@ -1,43 +1,36 @@
 ---
 title: "Welcome"
 description: "Build Twitch applications and bots with full EventSub support. A modern, async Python library for real-time notifications, Helix API access, and authentication."
-icon: material/broadcast
+icon: lucide/rocket
 hide:
   - toc
+search:
+  exclude: true
 ---
 
+# Welcome to twitch.py
 
-# twitch.py
+twitch.py is a modern, async-first Python library for building Twitch bots and applications with full EventSub support, Helix API access, and built-in OAuth management.
 
-A Python library for building Twitch applications with real-time events and API access.
+!!! tip "New here?"
+    Jump straight to the [Quickstart Guide](quickstart.md) and get a bot running in minutes.
 
-## Features
+## Why twitch.py?
 
-* Full async/await support for modern Python development
-* Real-time EventSub integration with automatic reconnection
-* Complete Helix API coverage with proper rate limiting
-* Built-in authentication handling and token management
-* Multi-shard support for high-volume applications
-* Type hints throughout for better development experience
+Twitch offers two main systems for developers:
 
-## Getting Started
+- **Helix API** for querying channel info, streams, users, and more
+- **EventSub** for receiving real-time events like follows, subscriptions, and chat messages
 
-* **[Quickstart Guide](quickstart.md)** - Get up and running in minutes
-* **[Concepts](concepts.md)** - Learn how everything works together
-* **[Examples](https://github.com/mrsnifo/twitch.py/tree/main/examples)** - See real working code
+## Key Features
 
-## Reference
+- **Async-first** design that uses `async` / `await` for high-performance bots
+- **Auto-reconnect** feature that manages dropped connections smoothly
+- **OAuth management** with token refresh and multi-user auth included 
+- **Rate limit handling** so you don't need to worry about hitting API limits
+- **Full type hints** for excellent IDE support and autocompletion
 
-* [twitch](reference/app/app.md) - Application core
-* [twitch.eventsub](reference/eventsub/index.md) - EventSub management and handlers
-* [twitch.oauth](reference/oauth/flows.md) - OAuth authentication flows
+## Need Help?
 
-## Extensions
-
-* [twitch.ext.tasks](ext/tasks.md) - Async task helpers and scheduling utilities
-
-## Support
-
-* **Issues**: [Report bugs or request features](https://github.com/mrsnifo/twitch.py/issues)
-* **Discord**: [Twitch API](https://discord.gg/UFTkgnse7d)
-
+- **Bug reports** on [GitHub Issues](https://github.com/mrsnifo/twitch.py/issues)
+- **Community** on [Discord](https://discord.gg/UFTkgnse7d)

@@ -1,5 +1,5 @@
 ---
-icon: material/key
+icon: lucide/key
 hide:
   - toc
 ---

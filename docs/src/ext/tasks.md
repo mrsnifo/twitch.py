@@ -1,5 +1,5 @@
 ---
-icon: material/clock-time-eleven-outline
+icon: lucide/clock
 ---
 
 # Loop System

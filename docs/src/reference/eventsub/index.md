@@ -1,5 +1,5 @@
 ---
-icon: material/information-slab-circle
+icon: lucide/info
 hide:
   - toc
 ---

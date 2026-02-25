@@ -1,345 +1,626 @@
 ---
-icon: simple/databricks
+icon: lucide/database
 ---
 
-## ::: twitch.models.UserIdentity
+::: twitch.models.UserIdentity
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Amount
+::: twitch.models.Amount
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ChannelInfo
+::: twitch.models.ChannelInfo
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.StreamInfo
+::: twitch.models.StreamInfo
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.StreamKey
+::: twitch.models.StreamKey
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ChannelStreamSchedule
+::: twitch.models.ChannelStreamSchedule
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ScheduleSegment
+::: twitch.models.ScheduleSegment
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ScheduleVacation
+::: twitch.models.ScheduleVacation
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.StreamMarker
+::: twitch.models.StreamMarker
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.AdSchedule
+::: twitch.models.AdSchedule
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.AdSnooze
+::: twitch.models.AdSnooze
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Raid
+::: twitch.models.Raid
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.UserSubscription
+::: twitch.models.UserSubscription
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.UserInfo
+::: twitch.models.UserInfo
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ChannelEditor
+::: twitch.models.ChannelEditor
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ChannelVIP
+::: twitch.models.ChannelVIP
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Moderator
+::: twitch.models.Moderator
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Chatter
+::: twitch.models.Chatter
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.FollowedChannel
+::: twitch.models.FollowedChannel
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ChannelFollower
+::: twitch.models.ChannelFollower
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.BannedUser
+::: twitch.models.BannedUser
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.UnbanRequest
+::: twitch.models.UnbanRequest
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.BlockedTerm
+::: twitch.models.BlockedTerm
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ChatSettings
+::: twitch.models.ChatSettings
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.SharedChatParticipant
+::: twitch.models.SharedChatParticipant
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.SharedChatSession
+::: twitch.models.SharedChatSession
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.DropReason
+::: twitch.models.DropReason
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.SendMessageStatus
+::: twitch.models.SendMessageStatus
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.UserChatColor
+::: twitch.models.UserChatColor
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ChatBadgeSet
+::: twitch.models.ChatBadgeSet
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.BadgeVersion
+::: twitch.models.BadgeVersion
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.AutoModSettings
+::: twitch.models.AutoModSettings
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ShieldModeStatus
+::: twitch.models.ShieldModeStatus
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.WarnReason
+::: twitch.models.WarnReason
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.AutoModStatusMessage
+::: twitch.models.AutoModStatusMessage
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Cheermote
+::: twitch.models.Cheermote
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.CheermoteTier
+::: twitch.models.CheermoteTier
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.EmoteImages
+::: twitch.models.EmoteImages
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ChannelEmote
+::: twitch.models.ChannelEmote
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.GlobalEmote
+::: twitch.models.GlobalEmote
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.EmoteSet
+::: twitch.models.EmoteSet
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Extension
+::: twitch.models.Extension
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ExtensionLiveChannel
+::: twitch.models.ExtensionLiveChannel
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ExtensionSecret
+::: twitch.models.ExtensionSecret
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ExtensionConfiguration
+::: twitch.models.ExtensionConfiguration
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.UserExtension
+::: twitch.models.UserExtension
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ActiveUserExtension
+::: twitch.models.ActiveUserExtension
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ExtensionComponent
+::: twitch.models.ExtensionComponent
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ExtensionPanel
+::: twitch.models.ExtensionPanel
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ExtensionOverlay
+::: twitch.models.ExtensionOverlay
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ExtensionTransaction
+::: twitch.models.ExtensionTransaction
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ExtensionBitsProduct
+::: twitch.models.ExtensionBitsProduct
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Subscription
+::: twitch.models.Subscription
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Conduit
+::: twitch.models.Conduit
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ConduitShard
+::: twitch.models.ConduitShard
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ConduitShardError
+::: twitch.models.ConduitShardError
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ConduitShardUpdate
+::: twitch.models.ConduitShardUpdate
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Category
+::: twitch.models.Category
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Game
+::: twitch.models.Game
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.SearchChannel
+::: twitch.models.SearchChannel
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Clip
+::: twitch.models.Clip
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Video
+::: twitch.models.Video
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.MutedSegment
+::: twitch.models.MutedSegment
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ContentClassificationLabel
+::: twitch.models.ContentClassificationLabel
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.AnalyticsReport
+::: twitch.models.AnalyticsReport
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.TeamInfo
+::: twitch.models.TeamInfo
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.ChannelTeam
+::: twitch.models.ChannelTeam
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.TeamUsers
+::: twitch.models.TeamUsers
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.StarCommercial
+::: twitch.models.StarCommercial
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.BitsLeaderboardEntry
+::: twitch.models.BitsLeaderboardEntry
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Charity
+::: twitch.models.Charity
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.CharityCampaign
+::: twitch.models.CharityCampaign
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.CharityDonation
+::: twitch.models.CharityDonation
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.CreatorGoal
+::: twitch.models.CreatorGoal
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Contribution
+::: twitch.models.Contribution
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.HypeTrainEvent
+::: twitch.models.HypeTrainStatus
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
+  
+---
+
+::: twitch.models.HypeTrainRecord
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
+
+---
+
+::: twitch.models.CurrentHypeTrain
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.HypeTrainStatus
- 
+::: twitch.models.Poll
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
+
+---
+
+::: twitch.models.PollChoice
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
+
 ---
 
-## ::: twitch.models.HypeTrainRecord
+::: twitch.models.Prediction
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.CurrentHypeTrain
+::: twitch.models.Outcome
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Poll
+::: twitch.models.UserActiveExtensionUpdate
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.PollChoice
+::: twitch.models.DropsEntitlement
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Prediction
+::: twitch.models.DropsEntitlementUpdate
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.Outcome
+::: twitch.models.SuspiciousUserStatus
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.UserActiveExtensionUpdate
+::: twitch.models.CreatedClip
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
 
-## ::: twitch.models.DropsEntitlement
+::: twitch.models.ClipDownload
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
 
 ---
+
+::: twitch.models.UserAuthorization
+    options:
+	    show_root_heading: true
+	    show_root_full_path: false
+
 
-## ::: twitch.models.DropsEntitlementUpdate
