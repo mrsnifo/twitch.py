@@ -1,0 +1,52 @@
+Index: docs/requirements.txt
+===================================================================
+diff --git a/docs/requirements.txt b/docs/requirements.txt
+deleted file mode 100644
+--- a/docs/requirements.txt	(revision a8c0f369cfa663dd07ef9d09d6d27a9bf243211c)
++++ /dev/null	(revision a8c0f369cfa663dd07ef9d09d6d27a9bf243211c)
+@@ -1,2 +0,0 @@
+-mkdocs-material==9.6.15
+-mkdocstrings-python==1.16.12
+\ No newline at end of file
+Index: docs/.docs/requirements.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-16LE
+===================================================================
+diff --git a/docs/.docs/requirements.txt b/docs/.docs/requirements.txt
+new file mode 100644
+--- /dev/null	(date 1771943220746)
++++ b/docs/.docs/requirements.txt	(date 1771943220746)
+@@ -0,0 +1,2 @@
++zensical==0.0.23
++mkdocstrings-python==2.0.3
+Index: docs/src/reference/app/models.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>---\r\nicon: simple/databricks\r\n---\r\n\r\n## ::: twitch.models.UserIdentity\r\n\r\n---\r\n\r\n## ::: twitch.models.Amount\r\n\r\n---\r\n\r\n## ::: twitch.models.ChannelInfo\r\n\r\n---\r\n\r\n## ::: twitch.models.StreamInfo\r\n\r\n---\r\n\r\n## ::: twitch.models.StreamKey\r\n\r\n---\r\n\r\n## ::: twitch.models.ChannelStreamSchedule\r\n\r\n---\r\n\r\n## ::: twitch.models.ScheduleSegment\r\n\r\n---\r\n\r\n## ::: twitch.models.ScheduleVacation\r\n\r\n---\r\n\r\n## ::: twitch.models.StreamMarker\r\n\r\n---\r\n\r\n## ::: twitch.models.AdSchedule\r\n\r\n---\r\n\r\n## ::: twitch.models.AdSnooze\r\n\r\n---\r\n\r\n## ::: twitch.models.Raid\r\n\r\n---\r\n\r\n## ::: twitch.models.UserSubscription\r\n\r\n---\r\n\r\n## ::: twitch.models.UserInfo\r\n\r\n---\r\n\r\n## ::: twitch.models.ChannelEditor\r\n\r\n---\r\n\r\n## ::: twitch.models.ChannelVIP\r\n\r\n---\r\n\r\n## ::: twitch.models.Moderator\r\n\r\n---\r\n\r\n## ::: twitch.models.Chatter\r\n\r\n---\r\n\r\n## ::: twitch.models.FollowedChannel\r\n\r\n---\r\n\r\n## ::: twitch.models.ChannelFollower\r\n\r\n---\r\n\r\n## ::: twitch.models.BannedUser\r\n\r\n---\r\n\r\n## ::: twitch.models.UnbanRequest\r\n\r\n---\r\n\r\n## ::: twitch.models.BlockedTerm\r\n\r\n---\r\n\r\n## ::: twitch.models.ChatSettings\r\n\r\n---\r\n\r\n## ::: twitch.models.SharedChatParticipant\r\n\r\n---\r\n\r\n## ::: twitch.models.SharedChatSession\r\n\r\n---\r\n\r\n## ::: twitch.models.DropReason\r\n\r\n---\r\n\r\n## ::: twitch.models.SendMessageStatus\r\n\r\n---\r\n\r\n## ::: twitch.models.UserChatColor\r\n\r\n---\r\n\r\n## ::: twitch.models.ChatBadgeSet\r\n\r\n---\r\n\r\n## ::: twitch.models.BadgeVersion\r\n\r\n---\r\n\r\n## ::: twitch.models.AutoModSettings\r\n\r\n---\r\n\r\n## ::: twitch.models.ShieldModeStatus\r\n\r\n---\r\n\r\n## ::: twitch.models.WarnReason\r\n\r\n---\r\n\r\n## ::: twitch.models.AutoModStatusMessage\r\n\r\n---\r\n\r\n## ::: twitch.models.Cheermote\r\n\r\n---\r\n\r\n## ::: twitch.models.CheermoteTier\r\n\r\n---\r\n\r\n## ::: twitch.models.EmoteImages\r\n\r\n---\r\n\r\n## ::: twitch.models.ChannelEmote\r\n\r\n---\r\n\r\n## ::: twitch.models.GlobalEmote\r\n\r\n---\r\n\r\n## ::: twitch.models.EmoteSet\r\n\r\n---\r\n\r\n## ::: twitch.models.Extension\r\n\r\n---\r\n\r\n## ::: twitch.models.ExtensionLiveChannel\r\n\r\n---\r\n\r\n## ::: twitch.models.ExtensionSecret\r\n\r\n---\r\n\r\n## ::: twitch.models.ExtensionConfiguration\r\n\r\n---\r\n\r\n## ::: twitch.models.UserExtension\r\n\r\n---\r\n\r\n## ::: twitch.models.ActiveUserExtension\r\n\r\n---\r\n\r\n## ::: twitch.models.ExtensionComponent\r\n\r\n---\r\n\r\n## ::: twitch.models.ExtensionPanel\r\n\r\n---\r\n\r\n## ::: twitch.models.ExtensionOverlay\r\n\r\n---\r\n\r\n## ::: twitch.models.ExtensionTransaction\r\n\r\n---\r\n\r\n## ::: twitch.models.ExtensionBitsProduct\r\n\r\n---\r\n\r\n## ::: twitch.models.Subscription\r\n\r\n---\r\n\r\n## ::: twitch.models.Conduit\r\n\r\n---\r\n\r\n## ::: twitch.models.ConduitShard\r\n\r\n---\r\n\r\n## ::: twitch.models.ConduitShardError\r\n\r\n---\r\n\r\n## ::: twitch.models.ConduitShardUpdate\r\n\r\n---\r\n\r\n## ::: twitch.models.Category\r\n\r\n---\r\n\r\n## ::: twitch.models.Game\r\n\r\n---\r\n\r\n## ::: twitch.models.SearchChannel\r\n\r\n---\r\n\r\n## ::: twitch.models.Clip\r\n\r\n---\r\n\r\n## ::: twitch.models.Video\r\n\r\n---\r\n\r\n## ::: twitch.models.MutedSegment\r\n\r\n---\r\n\r\n## ::: twitch.models.ContentClassificationLabel\r\n\r\n---\r\n\r\n## ::: twitch.models.AnalyticsReport\r\n\r\n---\r\n\r\n## ::: twitch.models.TeamInfo\r\n\r\n---\r\n\r\n## ::: twitch.models.ChannelTeam\r\n\r\n---\r\n\r\n## ::: twitch.models.TeamUsers\r\n\r\n---\r\n\r\n## ::: twitch.models.StarCommercial\r\n\r\n---\r\n\r\n## ::: twitch.models.BitsLeaderboardEntry\r\n\r\n---\r\n\r\n## ::: twitch.models.Charity\r\n\r\n---\r\n\r\n## ::: twitch.models.CharityCampaign\r\n\r\n---\r\n\r\n## ::: twitch.models.CharityDonation\r\n\r\n---\r\n\r\n## ::: twitch.models.CreatorGoal\r\n\r\n---\r\n\r\n## ::: twitch.models.Contribution\r\n\r\n---\r\n\r\n## ::: twitch.models.HypeTrainEvent\r\n\r\n---\r\n\r\n## ::: twitch.models.HypeTrainStatus\r\n \r\n---\r\n\r\n## ::: twitch.models.HypeTrainRecord\r\n\r\n---\r\n\r\n## ::: twitch.models.CurrentHypeTrain\r\n\r\n---\r\n\r\n## ::: twitch.models.Poll\r\n\r\n---\r\n\r\n## ::: twitch.models.PollChoice\r\n\r\n---\r\n\r\n## ::: twitch.models.Prediction\r\n\r\n---\r\n\r\n## ::: twitch.models.Outcome\r\n\r\n---\r\n\r\n## ::: twitch.models.UserActiveExtensionUpdate\r\n\r\n---\r\n\r\n## ::: twitch.models.DropsEntitlement\r\n\r\n---\r\n\r\n## ::: twitch.models.DropsEntitlementUpdate\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/docs/src/reference/app/models.md b/docs/src/reference/app/models.md
+--- a/docs/src/reference/app/models.md	(revision a8c0f369cfa663dd07ef9d09d6d27a9bf243211c)
++++ b/docs/src/reference/app/models.md	(date 1771943220738)
+@@ -302,10 +302,6 @@
+ 
+ ---
+ 
+-## ::: twitch.models.HypeTrainEvent
+-
+----
+-
+ ## ::: twitch.models.HypeTrainStatus
+  
+ ---
+diff --git a/docs/overrides/404.html b/docs/.docs/overrides/404.html
+rename from docs/overrides/404.html
+rename to docs/.docs/overrides/404.html
+diff --git a/docs/mkdocs.yml b/docs/.docs/mkdocs.yml
+rename from docs/mkdocs.yml
+rename to docs/.docs/mkdocs.yml
+diff --git a/docs/.readthedocs.yaml b/docs/.docs/.readthedocs.yaml
+rename from docs/.readthedocs.yaml
+rename to docs/.docs/.readthedocs.yaml
