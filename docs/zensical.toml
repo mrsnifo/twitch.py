@@ -15,6 +15,29 @@ nav = [
         { "Concepts" = "concepts.md" },
         { "Quickstart" = "quickstart.md" },
         { "Logging" = "logging.md" }
+    ]},
+    { "Reference" = [
+        { "App" = "reference/app/app.md" },
+        { "Classes" = "reference/app/classes.md" },
+        { "Errors" = "reference/app/errors.md" },
+        { "Models" = "reference/app/models.md" },
+        { "Utils" = "reference/app/utils.md" }
+    ]},
+    { "Eventsub" = [
+        { "Index" = "reference/eventsub/index.md" },
+        { "Client" = "reference/eventsub/client.md" },
+        { "Classes" = "reference/eventsub/classes.md" },
+        { "Models" = "reference/eventsub/models.md" },
+        { "Errors" = "reference/eventsub/errors.md" },
+        { "Debug" = "reference/eventsub/debug.md" }
+    ]},
+    { "OAuth" = [
+        { "Flows" = "reference/oauth/flows.md" },
+        { "Scopes" = "reference/oauth/scopes.md" },
+        { "Models" = "reference/oauth/models.md" }
+    ]},
+    { "Extensions" = [
+        { "Tasks" = "ext/tasks.md" }
     ]}
 ]
 
@@ -86,3 +109,14 @@ link = "https://www.linkedin.com/in/sofienhichri"
 [project.extra.analytics]
 provider = "google"
 property = "G-Q0MYXS1EXK"
+
+
+[project.plugins.mkdocstrings.handlers.python]
+inventories = ["https://docs.python.org/3/objects.inv"]
+paths = ["..", "twitch"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+docstring_style = "numpy"
+inherited_members = true
+show_source = false
+show_root_heading = true
