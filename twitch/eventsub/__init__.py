@@ -3,7 +3,7 @@ twitch.eventsub
 
 Eventsub support
 
-:copyright: (c) 2025-present mrsnifo
+:copyright: (c) 2026-present mrsnifo
 :license: MIT, see LICENSE for more details.
 """
 

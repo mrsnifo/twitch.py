@@ -3,7 +3,7 @@ twitch.py
 
 Real-time Twitch EventSub and Helix API Integration
 
-:copyright: (c) 2025-present mrsnifo
+:copyright: (c) 2026-present mrsnifo
 :license: MIT, see LICENSE for more details.
 """
 
@@ -11,7 +11,7 @@ __title__ = 'twitch.py'
 __version__ = '4.0.4'
 __license__ = 'MIT License'
 __author__ = 'mrsnifo'
-__copyright__ = 'Copyright 2025-present mrsnifo'
+__copyright__ = 'Copyright 2026-present mrsnifo'
 __email__ = 'snifo@mail.com'
 __url__ = 'https://github.com/mrsnifo/twitch.py'
 
