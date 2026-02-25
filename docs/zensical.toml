@@ -10,6 +10,12 @@ site_dir = "site"
 use_directory_urls = true
 
 nav = [
+    { "Getting started" = [
+        "index.md",
+        { "Concepts" = "concepts.md" },
+        { "Quickstart" = "quickstart.md" },
+        { "Logging" = "logging.md" }
+    ]}
 ]
 
 [project.theme]
@@ -35,23 +41,23 @@ features = [
 ]
 
 [[project.theme.palette]]
-primary = "purple"
-accent = "purple"
+primary = "deep purple"
+accent = "deep purple"
 media = "(prefers-color-scheme)"
 toggle.icon = "lucide/sun-moon"
 toggle.name = "Switch to light mode"
 
 [[project.theme.palette]]
-primary = "purple"
-accent = "purple"
+primary = "deep purple"
+accent = "deep purple"
 media = "(prefers-color-scheme: light)"
 scheme = "default"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
-primary = "purple"
-accent = "purple"
+primary = "deep purple"
+accent = "deep purple"
 media = "(prefers-color-scheme: dark)"
 scheme = "slate"
 toggle.icon = "lucide/moon"
