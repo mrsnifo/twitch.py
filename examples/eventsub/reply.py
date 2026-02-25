@@ -23,8 +23,6 @@ async def on_chat_message_v1(message: Event[ChannelChatMessageEvent]):
 @client.event
 async def on_ready():
     """Called when client is ready"""
-    # Subscribe to chat message events for the channel
-    await client.eventsub.channel_chat_message()
     print("Client connected and listening to chat")
 
 

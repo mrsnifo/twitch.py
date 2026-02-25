@@ -16,7 +16,6 @@ async def on_channel_reward_redeem_add_v1(message: Event[ChannelPointsCustomRewa
 
 async def on_ready():
     """Called when client is ready"""
-    await client.eventsub.channel_points_custom_reward_redemption_add()
     print("Client connected.")
 
 client.run('ACCESS_TOKEN', 'REFRESH_TOKEN')

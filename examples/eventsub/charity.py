@@ -45,11 +45,6 @@ async def on_channel_charity_donate_v1(message: Event[ChannelCharityCampaignDona
 @client.event
 async def on_ready():
     """Called when client is ready and connected"""
-    # Subscribe to all charity campaign events
-    await client.eventsub.channel_charity_campaign_start()
-    await client.eventsub.channel_charity_campaign_progress()
-    await client.eventsub.channel_charity_campaign_stop()
-    await client.eventsub.channel_charity_campaign_donate()
     print("Client connected and listening to charity events")
 
 
