@@ -6,7 +6,7 @@ build:
     python: latest
   jobs:
     install:
-      - pip install -r requirements.txt
+      - pip install -r docs/requirements.txt
     build:
       html:
         - zensical build
